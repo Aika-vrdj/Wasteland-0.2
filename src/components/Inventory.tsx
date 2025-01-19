@@ -1,6 +1,8 @@
 import React from 'react';
 import { Package, DollarSign } from 'lucide-react';
 import { InventoryItem } from '../types';
+import { Collectible } from '../types';
+import { removeItemFromDB, updateItemQuantityInDB } from '../inventoryService';
 
 interface InventoryProps {
   items: InventoryItem[];
@@ -35,12 +37,14 @@ export function Inventory({ items, onSellItem }: InventoryProps) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {items.map((item) => (
+          
             <div key={item.collectible.id} className="terminal-border p-4 rounded">
               <div className="relative">
                 <img
-                  src={item.collectible.image}
+                  src={item.collectible.image_url}
                   alt={item.collectible.name}
-                  className="w-full h-48 object-cover rounded mb-4 opacity-80"
+                  className="w-full h-48 object-contain rounded mb-4 opacity-80"
+
                 />
                 <div className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-bold border ${getRarityColor(item.collectible.rarity)} bg-black/80 uppercase`}>
                   {item.collectible.rarity}
@@ -53,14 +57,16 @@ export function Inventory({ items, onSellItem }: InventoryProps) {
                 <span>{new Date(item.acquiredAt).toLocaleDateString()}</span>
               </div>
               <button
-                onClick={() => onSellItem(item)}
-                className="terminal-button w-full px-3 py-2 rounded flex items-center justify-center gap-2"
-              >
-                <DollarSign size={16} />
-                Sell for {item.collectible.rarity === 'legendary' ? '20' :
-                         item.collectible.rarity === 'rare' ? '15' :
-                         item.collectible.rarity === 'uncommon' ? '10' : '5'} RP
-              </button>
+  onClick={() => onSellItem(item)}
+  className={`terminal-button w-full px-3 py-2 rounded flex items-center justify-center gap-2 ${
+    item.quantity <= 1 ? 'hidden' : ''
+  }`}
+>
+  <DollarSign size={16} />
+  Sell for {item.collectible.rarity === 'legendary' ? '200' :
+           item.collectible.rarity === 'rare' ? '50' :
+           item.collectible.rarity === 'uncommon' ? '10' : '5'} RP
+</button>
             </div>
           ))}
         </div>
