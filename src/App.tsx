@@ -7,7 +7,6 @@ import { LevelProgress } from './components/LevelProgress';
 import { Auth } from './components/Auth';
 import { supabase } from './lib/supabase';
 import { Collectible, InventoryItem, PlayerStats } from './types';
-import { BadgeViewer } from './components/BadgeViewer'; // New BadgeViewer Component
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -19,7 +18,6 @@ export default function App() {
     xp: 0,
     xpNeeded: 100
   });
-  const [badges, setBadges] = useState<string[]>([]); // State to track earned badges
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -56,6 +54,7 @@ export default function App() {
           setLastSignIn(playerData.last_sign_in);
         }
 
+        // Load inventory with collectible details
         const { data: inventoryData } = await supabase
           .from('player_inventory')
           .select(`
@@ -79,37 +78,6 @@ export default function App() {
           }));
           setInventory(items);
         }
-
-        // Check badges
-        const { data: collectibles } = await supabase
-          .from('collectibles')
-          .select('id, rarity, type');
-        if (collectibles) {
-          const inventoryIds = inventoryData.map(item => item.collectible.id);
-          const earnedBadges: string[] = [];
-
-          // Check for badge criteria
-          const raritySet = new Set(collectibles.map(c => c.rarity));
-          const typeSet = new Set(collectibles.map(c => c.type));
-
-          if (
-            [...raritySet].every(rarity =>
-              inventoryData.some(item => item.collectible.rarity === rarity)
-            )
-          ) {
-            earnedBadges.push('All Rarities');
-          }
-
-          if (
-            [...typeSet].every(type =>
-              inventoryData.some(item => item.collectible.type === type)
-            )
-          ) {
-            earnedBadges.push('All Types');
-          }
-
-          setBadges(earnedBadges);
-        }
       } catch (error) {
         console.error('Error loading player data:', error);
       }
@@ -118,18 +86,152 @@ export default function App() {
     loadPlayerData();
   }, [session]);
 
+  const addToInventory = async (collectible: Collectible) => {
+    if (!session?.user?.id) return;
+
+    try {
+      const { data: existingItems } = await supabase
+        .from('player_inventory')
+        .select('quantity')
+        .eq('player_id', session.user.id)
+        .eq('collectible_id', collectible.id);
+
+      const existingItem = existingItems?.[0];
+
+      if (existingItem) {
+        await supabase
+          .from('player_inventory')
+          .update({ quantity: existingItem.quantity + 1 })
+          .eq('player_id', session.user.id)
+          .eq('collectible_id', collectible.id);
+
+        setInventory(current =>
+          current.map(item =>
+            item.collectible.id === collectible.id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          )
+        );
+      } else {
+        const { data: newItem } = await supabase
+          .from('player_inventory')
+          .insert({
+            player_id: session.user.id,
+            collectible_id: collectible.id,
+            quantity: 1
+          })
+          .select('quantity, acquired_at')
+          .single();
+
+        if (newItem) {
+          setInventory(current => [...current, {
+            collectible,
+            quantity: newItem.quantity,
+            acquiredAt: new Date(newItem.acquired_at)
+          }]);
+        }
+      }
+    } catch (error) {
+      console.error('Error updating inventory:', error);
+    }
+  };
+
+  const handleCodeRedeem = (amount: number) => {
+    setRebelPoints(current => current + amount);
+  };
+
+  const handleGachaRoll = async (item: Collectible, xpGained: number) => {
+    if (!session?.user?.id) return;
+
+    try {
+      await supabase.rpc('update_player_stats', {
+        p_id: session.user.id,
+        rp_change: -10,
+        xp_gained: xpGained
+      });
+
+      setRebelPoints(current => current - 10);
+      await addToInventory(item);
+      
+      setStats(current => {
+        let newXP = current.xp + xpGained;
+        let newLevel = current.level;
+        let newXPNeeded = current.level * 100;
+
+        while (newXP >= newXPNeeded) {
+          newXP -= newXPNeeded;
+          newLevel++;
+          newXPNeeded = newLevel * 100;
+        }
+
+        return {
+          level: newLevel,
+          xp: newXP,
+          xpNeeded: newXPNeeded
+        };
+      });
+    } catch (error) {
+      console.error('Error updating player stats:', error);
+    }
+  };
+
+  const handleSellItem = async (item: InventoryItem) => {
+    if (!session?.user?.id) return;
+
+    const rpGain = item.collectible.rarity === 'legendary' ? 20 :
+                   item.collectible.rarity === 'rare' ? 15 :
+                   item.collectible.rarity === 'uncommon' ? 10 : 5;
+
+    try {
+      if (item.quantity > 1) {
+        await supabase
+          .from('player_inventory')
+          .update({ quantity: item.quantity - 1 })
+          .eq('player_id', session.user.id)
+          .eq('collectible_id', item.collectible.id);
+
+        setInventory(current =>
+          current.map(invItem =>
+            invItem.collectible.id === item.collectible.id
+              ? { ...invItem, quantity: invItem.quantity - 1 }
+              : invItem
+          )
+        );
+      } else {
+        await supabase
+          .from('player_inventory')
+          .delete()
+          .eq('player_id', session.user.id)
+          .eq('collectible_id', item.collectible.id);
+
+        setInventory(current =>
+          current.filter(invItem => invItem.collectible.id !== item.collectible.id)
+        );
+      }
+
+      await supabase
+        .from('players')
+        .update({ rebel_points: rebelPoints + rpGain })
+        .eq('id', session.user.id);
+
+      setRebelPoints(current => current + rpGain);
+    } catch (error) {
+      console.error('Error selling item:', error);
+    }
+  };
+
   if (!session) {
     return <Auth />;
   }
 
-  return (
-    <div className="min-h-screen bg-black p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <pre
-          className="text-center text-sm leading-4 text-green-400 mt-2"
-          style={{ whiteSpace: 'pre-wrap' }}
-        >
-          {`
+ return (
+  <div className="min-h-screen bg-black p-6">
+    <div className="max-w-7xl mx-auto space-y-6">
+      <pre
+        className="text-center text-sm leading-4 text-green-400 mt-2"
+        style={{ whiteSpace: "pre-wrap" }}
+      >
+        {`
           ██╗    ██╗ █████╗ ███████╗████████╗███████╗██╗      █████╗ ███╗   ██╗██████╗ 
           ██║    ██║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██║     ██╔══██╗████╗  ██║██╔══██╗
           ██║ █╗ ██║███████║███████╗   ██║   █████╗  ██║     ███████║██╔██╗ ██║██║  ██║
@@ -138,20 +240,18 @@ export default function App() {
            ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
                     by Aika Ioka, version 0.2, aikavrdj.com
         `}
-        </pre>
-        {lastSignIn && (
-          <div className="text-green-500/60 text-sm">
-            Last Sign-in: {new Date(lastSignIn).toLocaleDateString()}
-          </div>
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CodeRedemption onRedeem={amount => setRebelPoints(rebelPoints + amount)} />
-          <LevelProgress stats={stats} />
+       </pre>
+      {lastSignIn && (
+        <div className="text-green-500/60 text-sm">
+          Last Sign-in: {new Date(lastSignIn).toLocaleDateString()}
         </div>
-        <GachaSystem rebelPoints={rebelPoints} onRoll={() => {}} />
-        <Inventory items={inventory} onSellItem={() => {}} />
-        <BadgeViewer badges={badges} /> {/* Add BadgeViewer */}
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CodeRedemption onRedeem={handleCodeRedeem} />
+        <LevelProgress stats={stats} />
       </div>
+      <GachaSystem rebelPoints={rebelPoints} onRoll={handleGachaRoll} />
+      <Inventory items={inventory} onSellItem={handleSellItem} />
     </div>
-  );
-}
+  </div>
+)}
