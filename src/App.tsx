@@ -224,29 +224,34 @@ export default function App() {
     return <Auth />;
   }
 
-  return (
-    <div className="min-h-screen bg-black p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="terminal-border bg-black p-4 rounded flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Terminal className="text-green-500" />
-            <h1 className="text-3xl font-bold text-green-500">REBEL COLLECTOR v1.0</h1>
-          </div>
-          {lastSignIn && (
-            <div className="text-green-500/60 text-sm">
-              Last Sign-in: {new Date(lastSignIn).toLocaleDateString()}
-            </div>
-          )}
+ return (
+  <div className="min-h-screen bg-black p-6">
+    <div className="max-w-7xl mx-auto space-y-6">
+      <pre
+        className="text-center text-sm leading-4 text-green-400 mt-2"
+        style={{ whiteSpace: "pre-wrap" }}
+      >
+        {`
+          ██╗    ██╗ █████╗ ███████╗████████╗███████╗██╗      █████╗ ███╗   ██╗██████╗ 
+          ██║    ██║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██║     ██╔══██╗████╗  ██║██╔══██╗
+          ██║ █╗ ██║███████║███████╗   ██║   █████╗  ██║     ███████║██╔██╗ ██║██║  ██║
+          ██║███╗██║██╔══██║╚════██║   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║  ██║
+          ╚███╔███╔╝██║  ██║███████║   ██║   ███████╗███████╗██║  ██║██║ ╚████║██████╔╝
+           ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
+                    by Aika Ioka, version 0.2, aikavrdj.com
+        `}
+       </pre>
+      {lastSignIn && (
+        <div className="text-green-500/60 text-sm">
+          Last Sign-in: {new Date(lastSignIn).toLocaleDateString()}
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CodeRedemption onRedeem={handleCodeRedeem} />
-          <LevelProgress stats={stats} />
-        </div>
-
-        <GachaSystem rebelPoints={rebelPoints} onRoll={handleGachaRoll} />
-        <Inventory items={inventory} onSellItem={handleSellItem} />
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CodeRedemption onRedeem={handleCodeRedeem} />
+        <LevelProgress stats={stats} />
       </div>
+      <GachaSystem rebelPoints={rebelPoints} onRoll={handleGachaRoll} />
+      <Inventory items={inventory} onSellItem={handleSellItem} />
     </div>
-  );
-}
+  </div>
+)}
