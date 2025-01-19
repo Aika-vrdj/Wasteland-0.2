@@ -42,10 +42,10 @@ export function GachaSystem({ rebelPoints, onRoll }: GachaSystemProps) {
       const rand = Math.random();
       let item;
       
-      if (rand < 0.02) {
+      if (rand < 0.03) {
         const legendaryItems = collectibles.filter(c => c.rarity === 'legendary');
         item = getRandomItem(legendaryItems);
-      } else if (rand < 0.10) {
+      } else if (rand < 0.12) {
         const rareItems = collectibles.filter(c => c.rarity === 'rare');
         item = getRandomItem(rareItems);
       } else if (rand < 0.30) {
