@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'VT323';
+  src: url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+}
+
+body {
+  background-color: #000;
+  color: #00ff00;
+  font-family: 'VT323', monospace;
+}
+
+.terminal-border {
+  border: 1px solid #00ff00;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.terminal-input {
+  background-color: #000;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  caret-color: #00ff00;
+}
+
+.terminal-input:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+.terminal-button {
+  background-color: #000;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  transition: all 0.3s ease;
+}
+
+.terminal-button:hover:not(:disabled) {
+  background-color: #00ff00;
+  color: #000;
+}
+
+.terminal-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.progress-bar {
+  background-color: #001a00;
+}
+
+.progress-bar-fill {
+  background-color: #00ff00;
+}
