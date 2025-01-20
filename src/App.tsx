@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Coins, Terminal } from 'lucide-react';
+import { Coins, Terminal, LogOut } from 'lucide-react';
 import { Inventory } from './components/Inventory';
 import { CodeRedemption } from './components/CodeRedemption';
 import { GachaSystem } from './components/GachaSystem';
@@ -32,6 +32,29 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      window.location.href = '/'; // Redirect to login or home page
+    } catch (error: any) {
+      console.error('Error during logout:', error.message);
+    }
+  };
+
+  return (
+    <div className="relative min-h-screen bg-black text-white">
+      {/* Logout Button */}
+      {session && (
+        <button
+          onClick={handleLogout}
+          className="absolute top-4 right-4 text-sm text-gray-400 hover:text-white flex items-center gap-1"
+        >
+          <LogOut size={16} />
+          Logout
+        </button>
+      )}
 
   useEffect(() => {
     async function loadPlayerData() {
