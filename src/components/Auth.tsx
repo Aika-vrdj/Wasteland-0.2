@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Lock, Mail, User, ArrowRight, Discord } from 'lucide-react';
+import { Lock, Mail, User, ArrowRight } from 'lucide-react';
+import { FaDiscord } from 'react-icons/fa'; // Import Discord icon
 import { supabase } from '../lib/supabase';
 
 type AuthMode = 'login' | 'register' | 'forgot-password' | 'reset-password';
@@ -11,20 +12,6 @@ export function Auth() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-
-  const handleDiscordLogin = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'discord',
-        options: {
-          redirectTo: window.location.origin, // Redirect back to your app after login
-        },
-      });
-      if (error) throw error;
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,17 +159,15 @@ export function Auth() {
           </button>
         </form>
 
-        <div className="mt-4">
+        <div className="mt-6 space-y-4">
           <button
-            onClick={handleDiscordLogin}
-            className="terminal-button w-full px-4 py-2 rounded flex items-center justify-center gap-2 bg-blue-600 text-white"
+            onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
+            className="terminal-button w-full px-4 py-2 rounded flex items-center justify-center gap-2"
           >
-            <Discord size={16} />
-            Login with Discord
+            <FaDiscord />
+            Access with Discord
           </button>
-        </div>
 
-        <div className="mt-6 space-y-2 text-center">
           {mode === 'login' && (
             <>
               <button
