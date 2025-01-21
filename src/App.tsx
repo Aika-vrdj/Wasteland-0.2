@@ -241,6 +241,16 @@ export default function App() {
                     by Aika Ioka, version 0.2, aikavrdj.com
         `}
        </pre>
+        <p className="text-center text-sm text-green-400">
+        Join our <a 
+          href="https://discord.com/invite/uqkvuMDTkf" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-green-500 underline hover:text-green-300"
+        >
+          discord community
+        </a> for codes.
+      </p>
       {lastSignIn && (
         <div className="text-green-500/60 text-sm">
           Last Sign-in: {new Date(lastSignIn).toLocaleDateString()}
