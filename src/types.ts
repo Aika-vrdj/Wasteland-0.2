@@ -4,6 +4,7 @@ export interface Collectible {
   description: string;
   image_url: string;
   rarity: 'common' | 'uncommon' | 'rare' | 'legendary';
+  type: 'food' | 'useless' | 'gear' | 'cupon' | 'limited';
 }
 
 export interface InventoryItem {
