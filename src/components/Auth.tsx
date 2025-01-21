@@ -70,7 +70,31 @@ export function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 text-green-500">
+      {/* Header Section */}
+      <header className="text-center mb-8">
+        <pre className="font-mono text-sm leading-tight text-green-500">
+{`     ______________
+    /            / |
+   /____________/ /
+  |____________|/`}
+        </pre>
+        <h1 className="text-3xl font-bold">Welcome to the Wasteland, Rebel</h1>
+        <p className="mt-4 text-sm text-green-500/80">
+          The world has crumbled, but you? You’re still standing. Barely. As a Rebel, you’ve traded the comforts of modern life for the thrill of scavenging, scouting, looting, and surviving in a wasteland where the only law is “finders, keepers.” And sometimes… “oops, too slow!”
+          <br />
+          <br />
+          Out here, every item tells a story. Rusty gear could mean the difference between life and death. A moldy piece of bread? Gourmet cuisine. That weird shiny trinket you just looted? Who knows, it might be priceless—or it might just be… weird.
+          <br />
+          <br />
+          Assemble your inventory, collect rare artifacts, and prove to the world (or just your fellow rebels) that you’re the ultimate scavenger. Will you be the hero who discovers legendary treasures? Or the joker who hoards useless trinkets? Either way, your story is yours to write.
+          <br />
+          <br />
+          So grab your courage (and maybe a helmet), and step into the fight for survival. The wasteland is calling, Rebel. Will you answer?
+        </p>
+      </header>
+
+      {/* Authentication Section */}
       <div className="terminal-border bg-black p-8 rounded-lg w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
           <Lock className="text-green-500" />
