@@ -20,7 +20,8 @@ export function GachaSystem({ rebelPoints, onRoll }: GachaSystemProps) {
   const loadCollectibles = async () => {
     const { data, error } = await supabase
       .from('collectibles')
-      .select('*');
+      .select('*')
+      .eq('is_active', true); // Only load active items
     
     if (error) {
       console.error('Error loading collectibles:', error);
