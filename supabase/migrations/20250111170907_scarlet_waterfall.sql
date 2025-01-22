@@ -60,32 +60,32 @@ CREATE POLICY "Users can read own player data"
   ON players
   FOR SELECT
   TO authenticated
-  USING (auth.uid() = id);
+  USING (auth.uid() = (SELECT id));
 
 CREATE POLICY "Users can update own player data"
   ON players
   FOR UPDATE
   TO authenticated
-  USING (auth.uid() = id);
+  USING (auth.uid() = (SELECT id));
 
 -- Create policies for player_inventory table
 CREATE POLICY "Users can read own inventory"
   ON player_inventory
   FOR SELECT
   TO authenticated
-  USING (player_id = auth.uid());
+  USING (player_id = (SELECT auth.uid()));
 
 CREATE POLICY "Users can insert own inventory items"
   ON player_inventory
   FOR INSERT
   TO authenticated
-  WITH CHECK (player_id = auth.uid());
+  WITH CHECK (player_id = (SELECT auth.uid()));
 
 CREATE POLICY "Users can update own inventory items"
   ON player_inventory
   FOR UPDATE
   TO authenticated
-  USING (player_id = auth.uid());
+  USING (player_id = (SELECT auth.uid()));
 
 -- Create function to handle updated_at
 CREATE OR REPLACE FUNCTION handle_updated_at()
