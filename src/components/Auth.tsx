@@ -133,7 +133,7 @@ export function Auth() {
               <label className="block text-green-500 mb-2">
                 <div className="flex items-center gap-2">
                   <Lock size={16} />
-                  <span>Access Code</span>
+                  <span>password</span>
                 </div>
               </label>
               <input
