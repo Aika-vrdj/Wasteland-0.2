@@ -203,7 +203,7 @@ export function Auth() {
                 onClick={() => setMode('forgot-password')}
                 className="text-green-500/70 hover:text-green-500 text-sm block w-full"
               >
-                Forgot Access Code?
+                Forgot Password?
               </button>
               <button
                 onClick={() => setMode('register')}
