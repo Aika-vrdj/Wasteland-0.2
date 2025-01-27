@@ -237,26 +237,36 @@ export default function App() {
  return (
   <div className="min-h-screen bg-black p-6">
     <div className="max-w-7xl mx-auto space-y-6">
-      <pre
-        className="text-center text-sm leading-4 text-green-400 mt-2"
-        style={{ whiteSpace: "pre-wrap" }}
-      >
-        {`
-          ██╗    ██╗ █████╗ ███████╗████████╗███████╗██╗      █████╗ ███╗   ██╗██████╗ 
-          ██║    ██║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██║     ██╔══██╗████╗  ██║██╔══██╗
-          ██║ █╗ ██║███████║███████╗   ██║   █████╗  ██║     ███████║██╔██╗ ██║██║  ██║
-          ██║███╗██║██╔══██║╚════██║   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║  ██║
-          ╚███╔███╔╝██║  ██║███████║   ██║   ███████╗███████╗██║  ██║██║ ╚████║██████╔╝
-           ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
-                    by Aika Ioka, version 0.2, <a 
-          href="https://aikavrdj.com" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-green-500 underline hover:text-green-300"
-        >
-          aikavrdj.com </a>
-        `}
-       </pre>
+     <pre
+  className="text-center text-sm leading-4 text-green-400 mt-2"
+  style={{ whiteSpace: "pre-wrap" }}
+>
+  {`
+    ██╗    ██╗ █████╗ ███████╗████████╗███████╗██╗      █████╗ ███╗   ██╗██████╗ 
+    ██║    ██║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██║     ██╔══██╗████╗  ██║██╔══██╗
+    ██║ █╗ ██║███████║███████╗   ██║   █████╗  ██║     ███████║██╔██╗ ██║██║  ██║
+    ██║███╗██║██╔══██║╚════██║   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║  ██║
+    ╚███╔███╔╝██║  ██║███████║   ██║   ███████╗███████╗██║  ██║██║ ╚████║██████╔╝
+     ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
+              by Aika Ioka, version 0.2, `}
+    <a
+      href="https://aikavrdj.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-green-500 underline hover:text-green-300"
+    >
+      aikavrdj.com
+    </a>
+    {' | '}
+    <a
+      href="https://aikavrdj.com/pages/donate"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-green-500 underline hover:text-green-300"
+    >
+      donate
+    </a>
+</pre>
             <div className="flex justify-between items-center mb-4">
         {lastSignIn && (
           <p className="text-green-500/60 text-sm">
@@ -265,7 +275,7 @@ export default function App() {
         )}
         <button
           onClick={handleSignOut}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400"
+          className="text-green-500 hover:text-green-300 underline decoration-dotted transition"
         >
           Sign Out
         </button>
