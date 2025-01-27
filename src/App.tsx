@@ -19,6 +19,16 @@ export default function App() {
     xpNeeded: 100
   });
 
+  const handleSignOut = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error('Error signing out:', error.message);
+  } else {
+    setSession(null); // Clear session from the state
+    console.log('Signed out successfully');
+  }
+};
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -238,10 +248,29 @@ export default function App() {
           ██║███╗██║██╔══██║╚════██║   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║  ██║
           ╚███╔███╔╝██║  ██║███████║   ██║   ███████╗███████╗██║  ██║██║ ╚████║██████╔╝
            ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
-                    by Aika Ioka, version 0.2, aikavrdj.com
+                    by Aika Ioka, version 0.2, <a 
+          href="https://aikavrdj.com" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-green-500 underline hover:text-green-300"
+        >
+          aikavrdj.com </a>
         `}
        </pre>
-        <p className="text-center text-sm text-green-400">
+            <div className="flex justify-between items-center mb-4">
+        {lastSignIn && (
+          <p className="text-green-500/60 text-sm">
+            Last Sign-in: {new Date(lastSignIn).toLocaleDateString()}
+          </p>
+        )}
+        <button
+          onClick={handleSignOut}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400"
+        >
+          Sign Out
+        </button>
+      </div>
+      <p className="text-center text-sm text-green-400">
         Join our <a 
           href="https://discord.com/invite/uqkvuMDTkf" 
           target="_blank" 
