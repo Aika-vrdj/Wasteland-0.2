@@ -188,8 +188,8 @@ export default function App() {
   const handleSellItem = async (item: InventoryItem) => {
     if (!session?.user?.id) return;
 
-    const rpGain = item.collectible.rarity === 'legendary' ? 20 :
-                   item.collectible.rarity === 'rare' ? 15 :
+    const rpGain = item.collectible.rarity === 'legendary' ? 200 :
+                   item.collectible.rarity === 'rare' ? 50 :
                    item.collectible.rarity === 'uncommon' ? 10 : 5;
 
     try {
