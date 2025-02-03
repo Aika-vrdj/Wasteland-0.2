@@ -63,7 +63,7 @@ export function Inventory({ items, onSellItem }: InventoryProps) {
   }`}
 >
   <DollarSign size={16} />
-  Sell for {item.collectible.rarity === 'legendary' ? '200' :
+  Sell for {item.collectible.rarity === 'legendary' ? '100' :
            item.collectible.rarity === 'rare' ? '50' :
            item.collectible.rarity === 'uncommon' ? '10' : '5'} RP
 </button>
