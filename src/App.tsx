@@ -279,12 +279,19 @@ export default function App() {
         >
           Sign Out
         </button>
+ {/* Add the Leaderboard link next to the Sign Out button */}
+        <a
+          href="https://wastlandleaderboard.netlify.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-green-500 hover:text-green-300 underline decoration-dotted transition ml-4"
+        >
+          Leaderboard
+        </a>             
       </div>
       <p className="text-center text-sm text-green-400">
         Join our <a 
           href="https://discord.com/invite/uqkvuMDTkf" 
-          target="_blank" 
-          rel="noopener noreferrer" 
           className="text-green-500 underline hover:text-green-300"
         >
           discord community
