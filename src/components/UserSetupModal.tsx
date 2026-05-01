@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { User, Radio, Save, X } from 'lucide-react';
+import { User, Radio, Save, X, ExternalLink } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
-// He añadido la prop onUpdate por si la estás usando para refrescar los datos en App.tsx
 export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) {
   const [username, setUsername] = useState(initialData?.username || '');
   const [kick, setKick] = useState(initialData?.kick_id || '');
@@ -25,7 +24,7 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
     setLoading(false);
     
     if (!error) {
-      if (onUpdate) onUpdate(); // Refresca la UI principal si la función existe
+      if (onUpdate) onUpdate();
       onClose();
     } else {
       alert("Error updating terminal.");
@@ -40,7 +39,6 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
           <h2 className="text-2xl font-bold text-green-500 tracking-tighter">
             {">"} IDENTIFICATION_REQUIRED
           </h2>
-          {/* Si ya tiene un username, le permitimos cerrar el modal sin guardar */}
           {initialData?.username && (
             <button onClick={onClose} className="text-green-500 hover:text-red-500 transition-colors">
               <X size={20} />
@@ -49,7 +47,7 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
         </div>
 
         <p className="text-green-500/70 text-sm mb-8 leading-tight">
-          Rebel detected. Update your Codename and provide your Kick ID to receive rewards and broadcast your progress in the wasteland.
+          Rebel detected. Update your Codename and provide your Kick ID to receive rewards and broadcast your progress.
         </p>
 
         <div className="space-y-6">
@@ -84,6 +82,18 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
                 className="w-full bg-green-500/5 border border-green-500/50 rounded py-2 pl-10 pr-4 text-green-500 focus:outline-none focus:border-green-400 transition-all"
                 placeholder="Your Kick username"
               />
+            </div>
+            {/* --- EL NUEVO LINK DE KICK --- */}
+            <div className="mt-2 text-right">
+              <a 
+                href="https://kick.com/aika_vrdj" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[10px] text-green-500/60 hover:text-green-400 underline decoration-dotted flex items-center justify-end gap-1 transition-colors uppercase tracking-tighter"
+              >
+                Not a Kick follower yet? Join the transmission
+                <ExternalLink size={10} />
+              </a>
             </div>
           </div>
 
