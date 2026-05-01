@@ -24,7 +24,7 @@ export function UserSetupModal({ isOpen, onClose, initialData }: any) {
 
     setLoading(false);
     if (!error) onClose();
-    else alert("Error al actualizar la terminal.");
+    else alert("Error updating terminal.");
   };
 
   const connectDiscord = async () => {
@@ -51,7 +51,7 @@ export function UserSetupModal({ isOpen, onClose, initialData }: any) {
         </div>
 
         <p className="text-green-500/70 text-sm mb-8 leading-tight">
-          Rebel detected. Update your Codename and link your social accounts for integrations and more.
+          Rebel detected. Update your Codename and link your social accounts for integrations and more!
         </p>
 
         <div className="space-y-6">
