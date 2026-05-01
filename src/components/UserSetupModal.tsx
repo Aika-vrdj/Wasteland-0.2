@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase';
 
 export function UserSetupModal({ isOpen, onClose, initialData }: any) {
   const [username, setUsername] = useState(initialData?.username || '');
-  const [kick, setKick] = useState(initialData?.kick_username || '');
+  const [kick, setKick] = useState(initialData?.kick_id || '');
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -18,7 +18,7 @@ export function UserSetupModal({ isOpen, onClose, initialData }: any) {
       .from('players')
       .update({
         username: username,
-        kick_username: kick
+        kick_id: kick
       })
       .eq('id', user?.id);
 
