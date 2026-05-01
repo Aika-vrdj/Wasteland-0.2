@@ -10,6 +10,7 @@ export function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState(''); // <-- NUEVO ESTADO
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -33,9 +34,18 @@ export function Auth() {
             setError('Passwords do not match');
             return;
           }
+          if (!username.trim()) {
+            setError('Codename is required for new Rebels');
+            return;
+          }
           const { error: registerError } = await supabase.auth.signUp({
             email,
             password,
+            options: {
+              data: {
+                username: username, // <-- GUARDAMOS EL USERNAME EN LA METADATA
+              }
+            }
           });
           if (registerError) throw registerError;
           setMessage('Registration successful! Please check your email to verify your account.');
@@ -81,11 +91,11 @@ export function Auth() {
           ██║███╗██║██╔══██║╚════██║   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║  ██║
           ╚███╔███╔╝██║  ██║███████║   ██║   ███████╗███████╗██║  ██║██║ ╚████║██████╔╝
            ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
-                    by Aika Ioka, version 0.2, aikavrdj.com
+                      by Aika Ioka, version 0.2, aikavrdj.com
         `}
         </pre>
         <h1 className="text-3xl font-bold">Welcome to the Wasteland, Rebel</h1>
-        <p className="mt-4 text-sm text-green-500/80">
+        <p className="mt-4 text-sm text-green-500/80 max-w-2xl mx-auto">
           The world has crumbled, but you? You’re still standing. Barely. As a Rebel, you’ve traded the comforts of modern life for the thrill of scavenging, scouting, looting, and surviving in a wasteland where the only law is “finders, keepers.” And sometimes… “oops, too slow!”
           <br />
           <br />
@@ -100,7 +110,7 @@ export function Auth() {
       </header>
 
       {/* Authentication Section */}
-      <div className="terminal-border bg-black p-8 rounded-lg w-full max-w-md">
+      <div className="terminal-border bg-black p-8 rounded-lg w-full max-w-md border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
         <div className="flex items-center gap-2 mb-8">
           <Lock className="text-green-500" />
           <h1 className="text-2xl font-bold text-green-500">
@@ -112,6 +122,26 @@ export function Auth() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* NUEVO: Campo de Username (Solo visible en registro) */}
+          {mode === 'register' && (
+            <div>
+              <label className="block text-green-500 mb-2">
+                <div className="flex items-center gap-2">
+                  <User size={16} />
+                  <span>Codename</span>
+                </div>
+              </label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 bg-black border border-green-500/50 rounded text-green-500 focus:outline-none focus:border-green-400 focus:shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all"
+                placeholder="Enter your rebel name"
+                required
+              />
+            </div>
+          )}
+
           <div>
             <label className="block text-green-500 mb-2">
               <div className="flex items-center gap-2">
@@ -123,7 +153,7 @@ export function Auth() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="terminal-input w-full px-4 py-2 rounded"
+              className="w-full px-4 py-2 bg-black border border-green-500/50 rounded text-green-500 focus:outline-none focus:border-green-400 focus:shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all"
               required
             />
           </div>
@@ -133,14 +163,14 @@ export function Auth() {
               <label className="block text-green-500 mb-2">
                 <div className="flex items-center gap-2">
                   <Lock size={16} />
-                  <span>password</span>
+                  <span>Password</span>
                 </div>
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="terminal-input w-full px-4 py-2 rounded"
+                className="w-full px-4 py-2 bg-black border border-green-500/50 rounded text-green-500 focus:outline-none focus:border-green-400 focus:shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all"
                 required
               />
             </div>
@@ -158,56 +188,56 @@ export function Auth() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="terminal-input w-full px-4 py-2 rounded"
+                className="w-full px-4 py-2 bg-black border border-green-500/50 rounded text-green-500 focus:outline-none focus:border-green-400 focus:shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all"
                 required
               />
             </div>
           )}
 
           {error && (
-            <div className="text-red-500 text-sm py-2">
+            <div className="text-red-500 text-sm py-2 border-l-2 border-red-500 pl-2 bg-red-500/10">
               ERROR: {error}
             </div>
           )}
 
           {message && (
-            <div className="text-green-500 text-sm py-2">
+            <div className="text-green-400 text-sm py-2 border-l-2 border-green-400 pl-2 bg-green-500/10">
               {message}
             </div>
           )}
 
           <button
             type="submit"
-            className="terminal-button w-full px-4 py-2 rounded flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 bg-green-500/10 border border-green-500 rounded text-green-500 hover:bg-green-500/20 flex items-center justify-center gap-2 transition-all font-bold tracking-wider"
           >
             <ArrowRight size={16} />
-            {mode === 'login' && 'Access System'}
-            {mode === 'register' && 'Initialize Account'}
-            {mode === 'forgot-password' && 'Send Recovery Link'}
-            {mode === 'reset-password' && 'Update Access Code'}
+            {mode === 'login' && 'ACCESS SYSTEM'}
+            {mode === 'register' && 'INITIALIZE ACCOUNT'}
+            {mode === 'forgot-password' && 'SEND RECOVERY LINK'}
+            {mode === 'reset-password' && 'UPDATE ACCESS CODE'}
           </button>
         </form>
 
-        <div className="mt-6 space-y-4">
+        <div className="mt-6 space-y-4 pt-6 border-t border-green-500/30">
           <button
             onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
-            className="terminal-button w-full px-4 py-2 rounded flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 bg-[#5865F2]/10 border border-[#5865F2] rounded text-[#5865F2] hover:bg-[#5865F2]/20 flex items-center justify-center gap-2 transition-all font-bold"
           >
-            <FaDiscord />
-            Access with Discord
+            <FaDiscord size={20} />
+            ACCESS WITH DISCORD
           </button>
 
           {mode === 'login' && (
             <>
               <button
                 onClick={() => setMode('forgot-password')}
-                className="text-green-500/70 hover:text-green-500 text-sm block w-full"
+                className="text-green-500/70 hover:text-green-400 text-sm block w-full transition-colors"
               >
                 Forgot Password?
               </button>
               <button
                 onClick={() => setMode('register')}
-                className="text-green-500/70 hover:text-green-500 text-sm block w-full"
+                className="text-green-500/70 hover:text-green-400 text-sm block w-full transition-colors"
               >
                 New User? Register Here
               </button>
@@ -216,7 +246,7 @@ export function Auth() {
           {mode !== 'login' && mode !== 'reset-password' && (
             <button
               onClick={() => setMode('login')}
-              className="text-green-500/70 hover:text-green-500 text-sm block w-full"
+              className="text-green-500/70 hover:text-green-400 text-sm block w-full transition-colors"
             >
               Return to Access Terminal
             </button>
