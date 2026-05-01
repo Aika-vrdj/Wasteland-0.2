@@ -51,7 +51,7 @@ export function UserSetupModal({ isOpen, onClose, initialData }: any) {
         </div>
 
         <p className="text-green-500/70 text-sm mb-8 leading-tight">
-          Rebelde detectado. Actualiza tu Codename y vincula tus frecuencias de transmisión para recibir suministros (recompensas).
+          Rebel detected. Update your Codename and link your social accounts for integrations and more.
         </p>
 
         <div className="space-y-6">
@@ -80,7 +80,7 @@ export function UserSetupModal({ isOpen, onClose, initialData }: any) {
                 value={kick}
                 onChange={(e) => setKick(e.target.value)}
                 className="w-full bg-green-500/5 border border-green-500/50 rounded py-2 pl-10 pr-4 text-green-500 focus:outline-none focus:border-green-400"
-                placeholder="Tu usuario de Kick"
+                placeholder="Kick username"
               />
             </div>
           </div>
