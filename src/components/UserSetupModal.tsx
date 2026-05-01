@@ -65,7 +65,7 @@ export function UserSetupModal({ isOpen, onClose, initialData }: any) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full bg-green-500/5 border border-green-500/50 rounded py-2 pl-10 pr-4 text-green-500 focus:outline-none focus:border-green-400"
-                placeholder="Ej: Scavenger_01"
+                placeholder="E.g.: Scavenger_01"
               />
             </div>
           </div>
@@ -97,7 +97,7 @@ export function UserSetupModal({ isOpen, onClose, initialData }: any) {
               }`}
             >
               <FaDiscord size={20} />
-              {initialData?.discord_id ? 'IDENTIDAD VINCULADA' : 'VINCULAR DISCORD'}
+              {initialData?.discord_id ? 'IDENTITY LINKED' : 'LINK DISCORD'}
             </button>
           </div>
 
