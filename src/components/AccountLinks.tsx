@@ -76,16 +76,16 @@ export function AccountLinks({ discordId, discordUsername, kickId, kickUsername 
   };
 
   return (
-    <div className="terminal-border bg-black p-6 rounded">
+    <div className="terminal-border bg-void p-6 rounded">
       <div className="flex items-center gap-2 mb-4">
-        <Link2 className="text-green-500" />
-        <h2 className="text-xl font-bold text-green-500">LINKED ACCOUNTS</h2>
+        <Link2 className="text-ash" />
+        <h2 className="text-xl font-bold text-ash">LINKED ACCOUNTS</h2>
       </div>
 
-      <div className="flex items-center justify-between py-2 border-b border-green-900/40">
-        <span className="text-green-500/80">Discord</span>
+      <div className="flex items-center justify-between py-2 border-b border-ash-dim/20">
+        <span className="text-ash/80">Discord</span>
         {discordId ? (
-          <span className="flex items-center gap-1 text-green-400 text-sm">
+          <span className="flex items-center gap-1 text-gold text-sm">
             <CheckCircle2 size={16} /> {discordUsername ?? 'linked'}
           </span>
         ) : (
@@ -96,9 +96,9 @@ export function AccountLinks({ discordId, discordUsername, kickId, kickUsername 
       </div>
 
       <div className="flex items-center justify-between py-2">
-        <span className="text-green-500/80">Kick</span>
+        <span className="text-ash/80">Kick</span>
         {kickId ? (
-          <span className="flex items-center gap-1 text-green-400 text-sm">
+          <span className="flex items-center gap-1 text-gold text-sm">
             <CheckCircle2 size={16} /> {kickUsername ?? 'linked'}
           </span>
         ) : (
@@ -113,7 +113,7 @@ export function AccountLinks({ discordId, discordUsername, kickId, kickUsername 
         )}
       </div>
 
-      {error && <p className="mt-3 text-red-400 text-sm font-mono">{error}</p>}
+      {error && <p className="mt-3 text-ember text-sm font-mono">{error}</p>}
     </div>
   );
 }
