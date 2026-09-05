@@ -4,10 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 120%; /* scales all Tailwind text-* (rem-based) sizes up together */
+}
+
 body {
   background-color: #000;
   color: #00ff00;
   font-family: 'VT323', monospace;
+  line-height: 1.4;
 }
 
 .terminal-border {
