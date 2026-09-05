@@ -10,8 +10,6 @@ import { UserSetupModal } from './components/UserSetupModal'; // <-- IMPORTANTE:
 import { supabase } from './lib/supabase';
 import { Collectible, InventoryItem, PlayerStats } from './types';
 
-const CEREBRO_KICK_LINK_URL = import.meta.env.VITE_CEREBRO_KICK_LINK_URL as string;
-
 export default function App() {
   const [session, setSession] = useState(null);
   const [rebelPoints, setRebelPoints] = useState(100);
@@ -169,14 +167,13 @@ export default function App() {
       return;
     }
 
-    fetch(CEREBRO_KICK_LINK_URL, {
+    fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/kick-link`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        code,
-        code_verifier: verifier,
-        supabase_access_token: session.access_token
-      })
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ code, code_verifier: verifier })
     })
       .then(res => res.json())
       .then(result => {
