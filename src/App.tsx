@@ -265,7 +265,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-black p-6">
+    <div className="min-h-screen bg-void p-6">
       {/* --- EL POPUP DE IDENTIFICACIÓN --- */}
       <UserSetupModal 
         isOpen={showSetup} 
@@ -275,48 +275,43 @@ export default function App() {
       />
 
       <div className="max-w-7xl mx-auto space-y-6">
-        <pre
-          className="text-center text-sm leading-4 text-green-400 mt-2"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`
-    ██╗    ██╗ █████╗ ███████╗████████╗███████╗██╗      █████╗ ███╗   ██╗██████╗ 
-    ██║    ██║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██║     ██╔══██╗████╗  ██║██╔══██╗
-    ██║ █╗ ██║███████║███████╗   ██║   █████╗  ██║     ███████║██╔██╗ ██║██║  ██║
-    ██║███╗██║██╔══██║╚════██║   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║  ██║
-    ╚███╔███╔╝██║  ██║███████║   ██║   ███████╗███████╗██║  ██║██║ ╚████║██████╔╝
-     ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
-               by Aika Ioka, version 0.2, `}
-          <a
-            href="https://aikavrdj.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-green-500 underline hover:text-green-300"
-          >
-            aikavrdj.com
-          </a>
-          {' | '}
-          <a
-            href="https://aikavrdj.com/pages/donate"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-green-500 underline hover:text-green-300"
-          >
-            donate
-          </a>
-        </pre>
+        <div className="scav-panel scav-rivets p-6 relative overflow-hidden">
+          <div
+            className="absolute inset-0 pointer-events-none opacity-60"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(232,178,61,0.06) 38px, rgba(232,178,61,0.06) 40px)'
+            }}
+          />
+          <div className="relative">
+            <p className="text-xs tracking-widest text-rust mb-1">SCAVENGER OUTPOST // UNIT OPERATOR: AIKA</p>
+            <h1 className="text-3xl text-ash">
+              <span className="text-ember">WASTE</span>LAND SCANNER
+            </h1>
+            <p className="text-center text-sm text-ash-dim mt-3">
+              by Aika Ioka, version 0.2 —{' '}
+              <a href="https://aikavrdj.com" target="_blank" rel="noopener noreferrer" className="text-ash underline hover:text-rust">
+                aikavrdj.com
+              </a>
+              {' | '}
+              <a href="https://aikavrdj.com/pages/donate" target="_blank" rel="noopener noreferrer" className="text-ash underline hover:text-rust">
+                donate
+              </a>
+            </p>
+          </div>
+        </div>
 
         <div className="flex justify-between items-center mb-4">
           <div className="flex flex-col">
             {lastSignIn && (
-              <p className="text-green-500/60 text-sm">
+              <p className="text-ash-dim text-sm">
                 Last Sign-in: {new Date(lastSignIn).toLocaleDateString()}
               </p>
             )}
             {/* BOTÓN PARA ABRIR EL PERFIL MANUALMENTE */}
             <button 
               onClick={() => setShowSetup(true)}
-              className="text-left text-xs text-green-500/40 hover:text-green-500 uppercase tracking-widest mt-1"
+              className="text-left text-xs text-ash-dim/50 hover:text-ash uppercase tracking-widest mt-1"
             >
               [ EDIT_PROFILE_TERMINAL ]
             </button>
@@ -325,7 +320,7 @@ export default function App() {
           <div className="flex items-center">
             <button
               onClick={handleSignOut}
-              className="text-green-500 hover:text-green-300 underline decoration-dotted transition"
+              className="text-ash hover:text-rust underline decoration-dotted transition"
             >
               Sign Out
             </button>
@@ -333,17 +328,17 @@ export default function App() {
               href="https://wastlandleaderboard.netlify.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-500 hover:text-green-300 underline decoration-dotted transition ml-4"
+              className="text-ash hover:text-rust underline decoration-dotted transition ml-4"
             >
               Leaderboard
             </a>
           </div>
         </div>
 
-        <p className="text-center text-sm text-green-400">
-          Join our <a 
+        <p className="text-center text-sm text-ash">
+          Join our <a
             href="https://discord.com/invite/uqkvuMDTkf" 
-            className="text-green-500 underline hover:text-green-300"
+            className="text-ash underline hover:text-rust"
           >
             discord community
           </a> for codes.
