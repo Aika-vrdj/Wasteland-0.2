@@ -1,71 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Sparkles, Coins } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Collectible } from '../types';
 
-interface GachaSystemProps {
-  rebelPoints: number;
-  onRoll: (item: Collectible, xpGained: number) => void;
+interface GachaRollResult {
+  success: boolean;
+  error?: string;
+  item?: Collectible;
+  xp_gained?: number;
+  new_rebel_points?: number;
+  new_level?: number;
+  new_xp?: number;
 }
 
-export function GachaSystem({ rebelPoints, onRoll }: GachaSystemProps) {
-  const [collectibles, setCollectibles] = useState<Collectible[]>([]);
+interface GachaSystemProps {
+  rebelPoints: number;
+  onRollResult: (result: GachaRollResult) => void;
+}
+
+const ROLL_COST = 10; // display only — the real cost is enforced by perform_gacha_roll() in Postgres
+
+export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
   const [isRolling, setIsRolling] = useState(false);
-  const ROLL_COST = 10;
-
-  useEffect(() => {
-    loadCollectibles();
-  }, []);
-
-  const loadCollectibles = async () => {
-    const { data, error } = await supabase
-      .from('collectibles')
-      .select('*')
-      .eq('is_active', true); // Only load active items
-    
-    if (error) {
-      console.error('Error loading collectibles:', error);
-      return;
-    }
-
-    setCollectibles(data);
-  };
-
-  const getRandomItem = (items: Collectible[]) => {
-    return items[Math.floor(Math.random() * items.length)];
-  };
+  const [error, setError] = useState<string | null>(null);
 
   const handleRoll = async () => {
     if (rebelPoints < ROLL_COST || isRolling) return;
     setIsRolling(true);
+    setError(null);
 
     try {
-      const rand = Math.random();
-      let item;
-      
-      if (rand < 0.03) {
-        const legendaryItems = collectibles.filter(c => c.rarity === 'legendary');
-        item = getRandomItem(legendaryItems);
-      } else if (rand < 0.10) {
-        const rareItems = collectibles.filter(c => c.rarity === 'rare');
-        item = getRandomItem(rareItems);
-      } else if (rand < 0.25) {
-        const uncommonItems = collectibles.filter(c => c.rarity === 'uncommon');
-        item = getRandomItem(uncommonItems);
-      } else {
-        const commonItems = collectibles.filter(c => c.rarity === 'common');
-        item = getRandomItem(commonItems);
+      // The roll itself — rarity, item choice, cost deduction, XP/level —
+      // all happens server-side in perform_gacha_roll(). The client never
+      // decides the outcome or supplies point/XP values.
+      const { data, error: rpcError } = await supabase.rpc('perform_gacha_roll');
+
+      if (rpcError) {
+        setError(rpcError.message);
+        return;
       }
 
-      const xpGained = item?.rarity === 'legendary' ? 20 :
-                      item?.rarity === 'rare' ? 10 :
-                      item?.rarity === 'uncommon' ? 5 : 1;
-
-      if (item) {
-        onRoll(item, xpGained);
+      const result = data as GachaRollResult;
+      if (!result.success) {
+        setError(result.error ?? 'Roll failed');
+        return;
       }
+
+      onRollResult(result);
     } finally {
       setIsRolling(false);
+      setTimeout(() => setError(null), 3000);
     }
   };
 
@@ -88,8 +72,12 @@ export function GachaSystem({ rebelPoints, onRoll }: GachaSystemProps) {
         className="terminal-button px-6 py-3 rounded flex items-center gap-2 mx-auto"
       >
         <Sparkles size={20} />
-        Scout and scavenge ({ROLL_COST} RP)
+        {isRolling ? 'Scouting...' : `Scout and scavenge (${ROLL_COST} RP)`}
       </button>
+
+      {error && (
+        <p className="mt-3 text-center text-red-400 text-sm font-mono">{error}</p>
+      )}
     </div>
   );
 }
