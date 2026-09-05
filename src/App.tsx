@@ -109,138 +109,74 @@ export default function App() {
     loadPlayerData();
   }, [session]);
 
-  const addToInventory = async (collectible: Collectible) => {
-    if (!session?.user?.id) return;
-
-    try {
-      const { data: existingItems } = await supabase
-        .from('player_inventory')
-        .select('quantity')
-        .eq('player_id', session.user.id)
-        .eq('collectible_id', collectible.id);
-
-      const existingItem = existingItems?.[0];
-
-      if (existingItem) {
-        await supabase
-          .from('player_inventory')
-          .update({ quantity: existingItem.quantity + 1 })
-          .eq('player_id', session.user.id)
-          .eq('collectible_id', collectible.id);
-
-        setInventory(current =>
-          current.map(item =>
-            item.collectible.id === collectible.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          )
-        );
-      } else {
-        const { data: newItem } = await supabase
-          .from('player_inventory')
-          .insert({
-            player_id: session.user.id,
-            collectible_id: collectible.id,
-            quantity: 1
-          })
-          .select('quantity, acquired_at')
-          .single();
-
-        if (newItem) {
-          setInventory(current => [...current, {
-            collectible,
-            quantity: newItem.quantity,
-            acquiredAt: new Date(newItem.acquired_at)
-          }]);
-        }
-      }
-    } catch (error) {
-      console.error('Error updating inventory:', error);
-    }
-  };
-
   const handleCodeRedeem = (amount: number) => {
     setRebelPoints(current => current + amount);
   };
 
-  const handleGachaRoll = async (item: Collectible, xpGained: number) => {
-    if (!session?.user?.id) return;
+  // perform_gacha_roll() already did everything server-side: validated the
+  // cost, rolled the rarity/item, updated rebel_points/xp/level, and wrote
+  // the inventory row. This just reflects that result into local state —
+  // it never computes or trusts a client-side outcome.
+  const handleGachaRollResult = (result: {
+    success: boolean;
+    error?: string;
+    item?: Collectible;
+    new_rebel_points?: number;
+    new_level?: number;
+    new_xp?: number;
+  }) => {
+    if (!result.success || !result.item) return;
 
-    try {
-      await supabase.rpc('update_player_stats', {
-        p_id: session.user.id,
-        rp_change: -10,
-        xp_gained: xpGained
-      });
+    setRebelPoints(result.new_rebel_points!);
+    setStats(current => ({
+      level: result.new_level!,
+      xp: result.new_xp!,
+      xpNeeded: result.new_level! * 100
+    }));
 
-      setRebelPoints(current => current - 10);
-      await addToInventory(item);
-      
-      setStats(current => {
-        let newXP = current.xp + xpGained;
-        let newLevel = current.level;
-        let newXPNeeded = current.level * 100;
-
-        while (newXP >= newXPNeeded) {
-          newXP -= newXPNeeded;
-          newLevel++;
-          newXPNeeded = newLevel * 100;
-        }
-
-        return {
-          level: newLevel,
-          xp: newXP,
-          xpNeeded: newXPNeeded
-        };
-      });
-    } catch (error) {
-      console.error('Error updating player stats:', error);
-    }
-  };
-
-  const handleSellItem = async (item: InventoryItem) => {
-    if (!session?.user?.id) return;
-
-    const rpGain = item.collectible.rarity === 'legendary' ? 100 :
-                   item.collectible.rarity === 'rare' ? 50 :
-                   item.collectible.rarity === 'uncommon' ? 10 : 5;
-
-    try {
-      if (item.quantity > 1) {
-        await supabase
-          .from('player_inventory')
-          .update({ quantity: item.quantity - 1 })
-          .eq('player_id', session.user.id)
-          .eq('collectible_id', item.collectible.id);
-
-        setInventory(current =>
-          current.map(invItem =>
-            invItem.collectible.id === item.collectible.id
-              ? { ...invItem, quantity: invItem.quantity - 1 }
-              : invItem
-          )
-        );
-      } else {
-        await supabase
-          .from('player_inventory')
-          .delete()
-          .eq('player_id', session.user.id)
-          .eq('collectible_id', item.collectible.id);
-
-        setInventory(current =>
-          current.filter(invItem => invItem.collectible.id !== item.collectible.id)
+    setInventory(current => {
+      const existing = current.find(i => i.collectible.id === result.item!.id);
+      if (existing) {
+        return current.map(i =>
+          i.collectible.id === result.item!.id
+            ? { ...i, quantity: i.quantity + 1 }
+            : i
         );
       }
+      return [...current, {
+        collectible: result.item!,
+        quantity: 1,
+        acquiredAt: new Date()
+      }];
+    });
+  };
 
-      await supabase
-        .from('players')
-        .update({ rebel_points: rebelPoints + rpGain })
-        .eq('id', session.user.id);
-
-      setRebelPoints(current => current + rpGain);
-    } catch (error) {
-      console.error('Error selling item:', error);
+  // sell_collectible() already validated ownership and looked up the real
+  // payout server-side. This just reflects the result.
+  const handleSellResult = (collectibleId: string, result: {
+    success: boolean;
+    error?: string;
+    rp_gained?: number;
+    new_rebel_points?: number;
+    remaining_quantity?: number;
+  }) => {
+    if (!result.success) {
+      console.error('Error selling item:', result.error);
+      return;
     }
+
+    setRebelPoints(result.new_rebel_points!);
+
+    setInventory(current => {
+      if (!result.remaining_quantity) {
+        return current.filter(i => i.collectible.id !== collectibleId);
+      }
+      return current.map(i =>
+        i.collectible.id === collectibleId
+          ? { ...i, quantity: result.remaining_quantity! }
+          : i
+      );
+    });
   };
 
   if (!session) {
@@ -336,8 +272,8 @@ export default function App() {
           <CodeRedemption onRedeem={handleCodeRedeem} />
           <LevelProgress stats={stats} />
         </div>
-        <GachaSystem rebelPoints={rebelPoints} onRoll={handleGachaRoll} />
-        <Inventory items={inventory} onSellItem={handleSellItem} />
+        <GachaSystem rebelPoints={rebelPoints} onRollResult={handleGachaRollResult} />
+        <Inventory items={inventory} onSellResult={handleSellResult} />
       </div>
     </div>
   );
