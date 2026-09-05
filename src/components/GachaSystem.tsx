@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Sparkles, Coins } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { sfx } from '../lib/sfx';
 import { Collectible } from '../types';
+import { ParticleBurst } from './ParticleBurst';
+import { RedeemCodeModal } from './RedeemCodeModal';
 
 interface GachaRollResult {
   success: boolean;
@@ -20,14 +23,26 @@ interface GachaSystemProps {
 
 const ROLL_COST = 10; // display only — the real cost is enforced by perform_gacha_roll() in Postgres
 
+const RARITY_COLOR: Record<string, string> = {
+  common: '#8A8378',
+  uncommon: '#D97A34',
+  rare: '#3FB8AF',
+  legendary: '#E8B23D'
+};
+
 export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
   const [isRolling, setIsRolling] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pulledItem, setPulledItem] = useState<Collectible | null>(null);
+  const [burstTrigger, setBurstTrigger] = useState(0);
+  const [showCodeModal, setShowCodeModal] = useState(false);
 
   const handleRoll = async () => {
     if (rebelPoints < ROLL_COST || isRolling) return;
     setIsRolling(true);
     setError(null);
+    setPulledItem(null);
+    sfx.click();
 
     try {
       // The roll itself — rarity, item choice, cost deduction, XP/level —
@@ -37,21 +52,30 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
 
       if (rpcError) {
         setError(rpcError.message);
+        sfx.error();
         return;
       }
 
       const result = data as GachaRollResult;
       if (!result.success) {
         setError(result.error ?? 'Roll failed');
+        sfx.error();
         return;
       }
 
       onRollResult(result);
+      setPulledItem(result.item ?? null);
+      if (result.item) {
+        sfx.reveal(result.item.rarity);
+        setBurstTrigger(t => t + 1);
+      }
     } finally {
       setIsRolling(false);
       setTimeout(() => setError(null), 3000);
     }
   };
+
+  const rarityColor = pulledItem ? RARITY_COLOR[pulledItem.rarity] : RARITY_COLOR.common;
 
   return (
     <div className="terminal-border bg-black p-6 rounded">
@@ -66,8 +90,50 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
         </div>
       </div>
 
+      {/* Reveal window — shows the last pull, with a rarity-colored particle burst */}
+      <div
+        className="relative overflow-hidden rounded border mb-6 flex items-center justify-center text-center"
+        style={{
+          minHeight: 140,
+          borderColor: pulledItem ? rarityColor : '#1f2937',
+          background: '#0a0a0a'
+        }}
+      >
+        <ParticleBurst trigger={burstTrigger} color={rarityColor} />
+        {!pulledItem && (
+          <p className="text-green-500/40 text-sm font-mono px-4">nothing scanned yet</p>
+        )}
+        {pulledItem && (
+          <div className="p-4 flex flex-col items-center gap-2">
+            <img
+              src={pulledItem.image_url}
+              alt={pulledItem.name}
+              className="h-20 w-20 object-contain"
+            />
+            <div
+              className="text-xs uppercase tracking-widest px-2 py-0.5 rounded border"
+              style={{ color: rarityColor, borderColor: rarityColor }}
+            >
+              {pulledItem.rarity}
+            </div>
+            <p className="font-semibold text-green-300">{pulledItem.name}</p>
+            <p className="text-green-500/70 text-sm max-w-xs">{pulledItem.description}</p>
+            {pulledItem.type === 'cupon' && (
+              <button
+                onClick={() => setShowCodeModal(true)}
+                onMouseEnter={() => sfx.hover()}
+                className="mt-1 terminal-button px-4 py-1.5 rounded text-sm"
+              >
+                Claim code
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
       <button
         onClick={handleRoll}
+        onMouseEnter={() => sfx.hover()}
         disabled={rebelPoints < ROLL_COST || isRolling}
         className="terminal-button px-6 py-3 rounded flex items-center gap-2 mx-auto"
       >
@@ -77,6 +143,14 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
 
       {error && (
         <p className="mt-3 text-center text-red-400 text-sm font-mono">{error}</p>
+      )}
+
+      {showCodeModal && pulledItem && (
+        <RedeemCodeModal
+          collectibleId={pulledItem.id}
+          itemName={pulledItem.name}
+          onClose={() => setShowCodeModal(false)}
+        />
       )}
     </div>
   );
