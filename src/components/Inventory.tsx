@@ -19,13 +19,13 @@ interface InventoryProps {
 const getRarityColor = (rarity: string) => {
   switch (rarity) {
     case 'legendary':
-      return 'text-purple-500 border-purple-500';
+      return 'text-gold border-gold';
     case 'rare':
-      return 'text-blue-500 border-blue-500';
+      return 'text-signal border-signal';
     case 'uncommon':
-      return 'text-green-500 border-green-500';
+      return 'text-rust border-rust';
     default:
-      return 'text-gray-500 border-gray-500';
+      return 'text-ash-dim border-ash-dim';
   }
 };
 
@@ -65,14 +65,14 @@ export function Inventory({ items, onSellResult }: InventoryProps) {
   };
 
   return (
-    <div className="terminal-border bg-black p-6 rounded">
+    <div className="terminal-border bg-void p-6 rounded">
       <div className="flex items-center gap-2 mb-6">
-        <Package className="text-green-500" />
-        <h2 className="text-2xl font-bold text-green-500">INVENTORY DATABASE</h2>
+        <Package className="text-ash" />
+        <h2 className="text-2xl font-bold text-ash">INVENTORY DATABASE</h2>
       </div>
 
       {items.length === 0 ? (
-        <div className="text-center py-8 text-green-500 font-mono">
+        <div className="text-center py-8 text-ash font-mono">
           DATABASE EMPTY. ACQUIRE ITEMS VIA LOOTING.
         </div>
       ) : (
@@ -85,13 +85,13 @@ export function Inventory({ items, onSellResult }: InventoryProps) {
                   alt={item.collectible.name}
                   className="w-full h-48 object-contain rounded mb-4 opacity-80"
                 />
-                <div className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-bold border ${getRarityColor(item.collectible.rarity)} bg-black/80 uppercase`}>
+                <div className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-bold border ${getRarityColor(item.collectible.rarity)} bg-void/80 uppercase`}>
                   {item.collectible.rarity}
                 </div>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-green-500">{item.collectible.name}</h3>
-              <p className="text-green-500/80 text-sm mb-2">{item.collectible.description}</p>
-              <div className="flex items-center justify-between text-sm text-green-500/60 mb-3">
+              <h3 className="font-semibold text-lg mb-2 text-ash">{item.collectible.name}</h3>
+              <p className="text-ash/80 text-sm mb-2">{item.collectible.description}</p>
+              <div className="flex items-center justify-between text-sm text-ash-dim mb-3">
                 <span>QTY: {item.quantity}</span>
                 <span>{new Date(item.acquiredAt).toLocaleDateString()}</span>
               </div>
