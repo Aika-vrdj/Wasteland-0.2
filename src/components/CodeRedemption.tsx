@@ -59,33 +59,34 @@ export function CodeRedemption({ onRedeem }: CodeRedemptionProps) {
   };
 
   return (
-    <div className="terminal-border bg-black p-4 rounded">
-      <div className="flex items-center gap-2 mb-4">
-        <Gift className="text-green-500" />
-        <h2 className="text-xl font-bold text-green-500">LOOT CODE TERMINAL</h2>
+    <div className="terminal-border bg-void p-4 rounded">
+      <div className="flex items-center gap-2 mb-1">
+        <Gift className="text-rust" />
+        <h2 className="text-xl text-ash">SUPPLY DROP CODE</h2>
       </div>
+      <p className="text-xs text-ash-dim mb-4">Found a code on a crate, in the Discord, or during a stream drop? Punch it in.</p>
       
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
           type="text"
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          placeholder="ENTER_LOOT_CODE"
+          placeholder="e.g. SCRAP-4X9K"
           className="terminal-input flex-1 px-4 py-2 rounded font-mono uppercase"
           disabled={isRedeeming}
         />
         <button
           type="submit"
           onMouseEnter={() => sfx.hover()}
-          className="terminal-button px-4 py-2 rounded font-mono"
+          className="terminal-button px-4 py-2 rounded"
           disabled={isRedeeming}
         >
-          EXECUTE
+          redeem
         </button>
       </form>
       
       {message && (
-        <p className="mt-2 font-mono text-green-500">{message}</p>
+        <p className="mt-2 font-mono text-ash">{message}</p>
       )}
     </div>
   );
