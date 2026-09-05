@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Gift } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { sfx } from '../lib/sfx';
 import { RedeemCodeResponse } from '../types';
 
 interface CodeRedemptionProps {
@@ -16,6 +17,7 @@ export function CodeRedemption({ onRedeem }: CodeRedemptionProps) {
     e.preventDefault();
     if (isRedeeming) return;
 
+    sfx.click();
     setIsRedeeming(true);
     setMessage('> PROCESSING...');
 
@@ -23,6 +25,7 @@ export function CodeRedemption({ onRedeem }: CodeRedemptionProps) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         setMessage('> ERROR: AUTHENTICATION REQUIRED');
+        sfx.error();
         return;
       }
 
@@ -35,15 +38,19 @@ export function CodeRedemption({ onRedeem }: CodeRedemptionProps) {
       
       if (error) {
         setMessage(`> ERROR: ${error.message}`);
+        sfx.error();
       } else if (!response.success) {
         setMessage(`> ERROR: ${response.error}`);
+        sfx.error();
       } else {
         setMessage(`> ACCESS GRANTED: ${response.reward_amount} RP TRANSFERRED`);
+        sfx.success();
         onRedeem(response.reward_amount!);
         setCode('');
       }
     } catch (err) {
       setMessage('> ERROR: SYSTEM MALFUNCTION');
+      sfx.error();
       console.error('Code redemption error:', err);
     } finally {
       setIsRedeeming(false);
@@ -69,6 +76,7 @@ export function CodeRedemption({ onRedeem }: CodeRedemptionProps) {
         />
         <button
           type="submit"
+          onMouseEnter={() => sfx.hover()}
           className="terminal-button px-4 py-2 rounded font-mono"
           disabled={isRedeeming}
         >
