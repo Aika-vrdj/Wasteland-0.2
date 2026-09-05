@@ -48,32 +48,32 @@ export function RedeemCodeModal({ collectibleId, itemName, onClose }: RedeemCode
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="terminal-border bg-black p-6 rounded max-w-sm w-full relative">
+    <div className="fixed inset-0 bg-void/80 flex items-center justify-center z-50 p-4">
+      <div className="terminal-border bg-void p-6 rounded max-w-sm w-full relative">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-green-500/60 hover:text-green-400"
+          className="absolute top-3 right-3 text-ash-dim hover:text-gold"
         >
           <X size={18} />
         </button>
 
-        <h3 className="text-lg font-bold text-green-500 mb-1">SUPPLY CRATE UNLOCKED</h3>
-        <p className="text-green-500/70 text-sm mb-4">{itemName}</p>
+        <h3 className="text-lg font-bold text-ash mb-1">SUPPLY CRATE UNLOCKED</h3>
+        <p className="text-ash/70 text-sm mb-4">{itemName}</p>
 
         {error && (
-          <p className="text-red-400 text-sm font-mono">{error}</p>
+          <p className="text-ember text-sm font-mono">{error}</p>
         )}
 
         {!error && !code && (
-          <p className="text-green-500/60 text-sm font-mono">decrypting code...</p>
+          <p className="text-ash-dim text-sm font-mono">decrypting code...</p>
         )}
 
         {code && (
           <>
-            <div className="bg-green-950/30 border border-green-800 rounded px-4 py-3 text-center font-mono text-green-300 text-lg tracking-widest mb-3">
+            <div className="bg-panel border border-ash-dim/30 rounded px-4 py-3 text-center font-mono text-rust text-lg tracking-widest mb-3">
               {code}
             </div>
-            <p className="text-sm text-green-400 mb-4">
+            <p className="text-sm text-gold mb-4">
               {copied
                 ? 'Code copied to clipboard. Redeem it at '
                 : 'Redeem it at '}
@@ -81,7 +81,7 @@ export function RedeemCodeModal({ collectibleId, itemName, onClose }: RedeemCode
                 href="https://aikavrdj.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline hover:text-green-300"
+                className="underline hover:text-rust"
               >
                 aikavrdj.com
               </a>
