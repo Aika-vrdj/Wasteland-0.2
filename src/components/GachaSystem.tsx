@@ -78,17 +78,18 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
   const rarityColor = pulledItem ? RARITY_COLOR[pulledItem.rarity] : RARITY_COLOR.common;
 
   return (
-    <div className="terminal-border bg-black p-6 rounded">
-      <div className="flex items-center justify-between mb-6">
+    <div className="terminal-border bg-void p-6 rounded">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <Sparkles className="text-green-500" />
-          <h2 className="text-2xl font-bold text-green-500">LOOT</h2>
+          <Sparkles className="text-ash" />
+          <h2 className="text-2xl text-ash">SCRAPTRAK&trade; MK. II</h2>
         </div>
         <div className="flex items-center gap-2">
-          <Coins className="text-green-500" />
-          <span className="font-semibold text-green-500">{rebelPoints} RP</span>
+          <Coins className="text-gold" />
+          <span className="font-semibold text-gold">{rebelPoints} RP</span>
         </div>
       </div>
+      <p className="text-xs text-ash-dim mb-6">batteries not included. hope not guaranteed.</p>
 
       {/* Reveal window — shows the last pull, with a rarity-colored particle burst */}
       <div
@@ -101,7 +102,7 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
       >
         <ParticleBurst trigger={burstTrigger} color={rarityColor} />
         {!pulledItem && (
-          <p className="text-green-500/40 text-sm font-mono px-4">nothing scanned yet</p>
+          <p className="text-ash-dim/60 text-sm font-mono px-4">sweep idle</p>
         )}
         {pulledItem && (
           <div className="p-4 flex flex-col items-center gap-2">
@@ -116,8 +117,8 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
             >
               {pulledItem.rarity}
             </div>
-            <p className="font-semibold text-green-300">{pulledItem.name}</p>
-            <p className="text-green-500/70 text-sm max-w-xs">{pulledItem.description}</p>
+            <p className="font-semibold text-rust">{pulledItem.name}</p>
+            <p className="text-ash/70 text-sm max-w-xs">{pulledItem.description}</p>
             {pulledItem.type === 'cupon' && (
               <button
                 onClick={() => setShowCodeModal(true)}
@@ -138,11 +139,12 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
         className="terminal-button px-6 py-3 rounded flex items-center gap-2 mx-auto"
       >
         <Sparkles size={20} />
-        {isRolling ? 'Scouting...' : `Scout and scavenge (${ROLL_COST} RP)`}
+        {isRolling ? 'Sweeping...' : 'Sweep for junk'}
       </button>
+      <p className="text-center text-xs text-ash-dim mt-2">costs {ROLL_COST} RP · what you find is decided back at base, not by this rusty thing</p>
 
       {error && (
-        <p className="mt-3 text-center text-red-400 text-sm font-mono">{error}</p>
+        <p className="mt-3 text-center text-ember text-sm font-mono">{error}</p>
       )}
 
       {showCodeModal && pulledItem && (
