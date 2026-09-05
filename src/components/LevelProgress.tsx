@@ -10,12 +10,12 @@ export function LevelProgress({ stats }: LevelProgressProps) {
   const progressPercentage = (stats.xp / stats.xpNeeded) * 100;
 
   return (
-    <div className="terminal-border bg-black p-4 rounded">
+    <div className="terminal-border bg-void p-4 rounded">
       <div className="flex items-center gap-2 mb-4">
-        <Trophy className="text-green-500" />
+        <Trophy className="text-ash" />
         <div>
-          <h2 className="text-xl font-bold text-green-500">LEVEL {stats.level}</h2>
-          <p className="text-sm text-green-500/60">
+          <h2 className="text-xl font-bold text-ash">LEVEL {stats.level}</h2>
+          <p className="text-sm text-ash-dim">
             {stats.xp} / {stats.xpNeeded} XP
           </p>
         </div>
