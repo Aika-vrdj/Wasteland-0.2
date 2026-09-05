@@ -80,10 +80,10 @@ export function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 text-green-500">
+    <div className="min-h-screen bg-void flex flex-col items-center justify-center p-4 text-ash">
       {/* Header Section */}
       <header className="text-center mb-8">
-        <pre className="font-mono text-sm leading-tight text-green-500">
+        <pre className="font-mono text-sm leading-tight text-ash">
 {`
           ██╗    ██╗ █████╗ ███████╗████████╗███████╗██╗      █████╗ ███╗   ██╗██████╗ 
           ██║    ██║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██║     ██╔══██╗████╗  ██║██╔══██╗
@@ -95,7 +95,7 @@ export function Auth() {
         `}
         </pre>
         <h1 className="text-3xl font-bold">Welcome to the Wasteland, Rebel</h1>
-        <p className="mt-4 text-sm text-green-500/80 max-w-2xl mx-auto">
+        <p className="mt-4 text-sm text-ash/80 max-w-2xl mx-auto">
           The world has crumbled, but you? You’re still standing. Barely. As a Rebel, you’ve traded the comforts of modern life for the thrill of scavenging, scouting, looting, and surviving in a wasteland where the only law is “finders, keepers.” And sometimes… “oops, too slow!”
           <br />
           <br />
@@ -110,10 +110,10 @@ export function Auth() {
       </header>
 
       {/* Authentication Section */}
-      <div className="terminal-border bg-black p-8 rounded-lg w-full max-w-md border border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+      <div className="terminal-border bg-void p-8 rounded-lg w-full max-w-md border border-ember/30 shadow-[0_0_15px_rgba(200,30,58,0.25)]">
         <div className="flex items-center gap-2 mb-8">
-          <Lock className="text-green-500" />
-          <h1 className="text-2xl font-bold text-green-500">
+          <Lock className="text-ash" />
+          <h1 className="text-2xl font-bold text-ash">
             {mode === 'login' && 'Access Terminal'}
             {mode === 'register' && 'New User Registration'}
             {mode === 'forgot-password' && 'Password Recovery'}
@@ -125,7 +125,7 @@ export function Auth() {
           {/* NUEVO: Campo de Username (Solo visible en registro) */}
           {mode === 'register' && (
             <div>
-              <label className="block text-green-500 mb-2">
+              <label className="block text-ash mb-2">
                 <div className="flex items-center gap-2">
                   <User size={16} />
                   <span>Codename</span>
@@ -135,7 +135,7 @@ export function Auth() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-2 bg-black border border-green-500/50 rounded text-green-500 focus:outline-none focus:border-green-400 focus:shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all"
+                className="w-full px-4 py-2 bg-void border border-ash-dim/60 rounded text-ash focus:outline-none focus:border-gold focus:shadow-[0_0_10px_rgba(217,122,52,0.35)] transition-all"
                 placeholder="Enter your rebel name"
                 required
               />
@@ -143,7 +143,7 @@ export function Auth() {
           )}
 
           <div>
-            <label className="block text-green-500 mb-2">
+            <label className="block text-ash mb-2">
               <div className="flex items-center gap-2">
                 <Mail size={16} />
                 <span>Email Address</span>
@@ -153,14 +153,14 @@ export function Auth() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-black border border-green-500/50 rounded text-green-500 focus:outline-none focus:border-green-400 focus:shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all"
+              className="w-full px-4 py-2 bg-void border border-ash-dim/60 rounded text-ash focus:outline-none focus:border-gold focus:shadow-[0_0_10px_rgba(217,122,52,0.35)] transition-all"
               required
             />
           </div>
 
           {mode !== 'forgot-password' && (
             <div>
-              <label className="block text-green-500 mb-2">
+              <label className="block text-ash mb-2">
                 <div className="flex items-center gap-2">
                   <Lock size={16} />
                   <span>Password</span>
@@ -170,7 +170,7 @@ export function Auth() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 bg-black border border-green-500/50 rounded text-green-500 focus:outline-none focus:border-green-400 focus:shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all"
+                className="w-full px-4 py-2 bg-void border border-ash-dim/60 rounded text-ash focus:outline-none focus:border-gold focus:shadow-[0_0_10px_rgba(217,122,52,0.35)] transition-all"
                 required
               />
             </div>
@@ -178,7 +178,7 @@ export function Auth() {
 
           {(mode === 'register' || mode === 'reset-password') && (
             <div>
-              <label className="block text-green-500 mb-2">
+              <label className="block text-ash mb-2">
                 <div className="flex items-center gap-2">
                   <Lock size={16} />
                   <span>Confirm Access Code</span>
@@ -188,27 +188,27 @@ export function Auth() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2 bg-black border border-green-500/50 rounded text-green-500 focus:outline-none focus:border-green-400 focus:shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all"
+                className="w-full px-4 py-2 bg-void border border-ash-dim/60 rounded text-ash focus:outline-none focus:border-gold focus:shadow-[0_0_10px_rgba(217,122,52,0.35)] transition-all"
                 required
               />
             </div>
           )}
 
           {error && (
-            <div className="text-red-500 text-sm py-2 border-l-2 border-red-500 pl-2 bg-red-500/10">
+            <div className="text-ember text-sm py-2 border-l-2 border-ember pl-2 bg-ember/10">
               ERROR: {error}
             </div>
           )}
 
           {message && (
-            <div className="text-green-400 text-sm py-2 border-l-2 border-green-400 pl-2 bg-green-500/10">
+            <div className="text-gold text-sm py-2 border-l-2 border-gold pl-2 bg-ember/10">
               {message}
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full px-4 py-2 bg-green-500/10 border border-green-500 rounded text-green-500 hover:bg-green-500/20 flex items-center justify-center gap-2 transition-all font-bold tracking-wider"
+            className="w-full px-4 py-2 bg-ember/10 border border-ash rounded text-ash hover:bg-ember/20 flex items-center justify-center gap-2 transition-all font-bold tracking-wider"
           >
             <ArrowRight size={16} />
             {mode === 'login' && 'ACCESS SYSTEM'}
@@ -218,7 +218,7 @@ export function Auth() {
           </button>
         </form>
 
-        <div className="mt-6 space-y-4 pt-6 border-t border-green-500/30">
+        <div className="mt-6 space-y-4 pt-6 border-t border-ember/30">
           <button
             onClick={() => supabase.auth.signInWithOAuth({ provider: 'discord' })}
             className="w-full px-4 py-2 bg-[#5865F2]/10 border border-[#5865F2] rounded text-[#5865F2] hover:bg-[#5865F2]/20 flex items-center justify-center gap-2 transition-all font-bold"
@@ -231,13 +231,13 @@ export function Auth() {
             <>
               <button
                 onClick={() => setMode('forgot-password')}
-                className="text-green-500/70 hover:text-green-400 text-sm block w-full transition-colors"
+                className="text-ash/70 hover:text-gold text-sm block w-full transition-colors"
               >
                 Forgot Password?
               </button>
               <button
                 onClick={() => setMode('register')}
-                className="text-green-500/70 hover:text-green-400 text-sm block w-full transition-colors"
+                className="text-ash/70 hover:text-gold text-sm block w-full transition-colors"
               >
                 New User? Register Here
               </button>
@@ -246,7 +246,7 @@ export function Auth() {
           {mode !== 'login' && mode !== 'reset-password' && (
             <button
               onClick={() => setMode('login')}
-              className="text-green-500/70 hover:text-green-400 text-sm block w-full transition-colors"
+              className="text-ash/70 hover:text-gold text-sm block w-full transition-colors"
             >
               Return to Access Terminal
             </button>
