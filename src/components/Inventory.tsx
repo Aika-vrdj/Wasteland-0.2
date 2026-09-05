@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Package, DollarSign } from 'lucide-react';
+import { Package, DollarSign, Gift } from 'lucide-react';
 import { InventoryItem } from '../types';
 import { supabase } from '../lib/supabase';
+import { sfx } from '../lib/sfx';
+import { RedeemCodeModal } from './RedeemCodeModal';
 
 interface InventoryProps {
   items: InventoryItem[];
@@ -36,10 +38,12 @@ const SELL_PRICE_LABEL: Record<string, string> = {
 
 export function Inventory({ items, onSellResult }: InventoryProps) {
   const [sellingId, setSellingId] = useState<string | null>(null);
+  const [codeModalFor, setCodeModalFor] = useState<{ id: string; name: string } | null>(null);
 
   const handleSell = async (item: InventoryItem) => {
     if (sellingId) return;
     setSellingId(item.collectible.id);
+    sfx.click();
 
     try {
       // The payout is looked up server-side from the collectibles table —
@@ -50,6 +54,7 @@ export function Inventory({ items, onSellResult }: InventoryProps) {
 
       if (error) {
         onSellResult(item.collectible.id, { success: false, error: error.message });
+        sfx.error();
         return;
       }
 
@@ -90,8 +95,21 @@ export function Inventory({ items, onSellResult }: InventoryProps) {
                 <span>QTY: {item.quantity}</span>
                 <span>{new Date(item.acquiredAt).toLocaleDateString()}</span>
               </div>
+
+              {item.collectible.type === 'cupon' && (
+                <button
+                  onClick={() => { sfx.click(); setCodeModalFor({ id: item.collectible.id, name: item.collectible.name }); }}
+                  onMouseEnter={() => sfx.hover()}
+                  className="terminal-button w-full px-3 py-2 rounded flex items-center justify-center gap-2 mb-2 text-sm"
+                >
+                  <Gift size={16} />
+                  View redeem code
+                </button>
+              )}
+
               <button
                 onClick={() => handleSell(item)}
+                onMouseEnter={() => sfx.hover()}
                 disabled={sellingId === item.collectible.id}
                 className={`terminal-button w-full px-3 py-2 rounded flex items-center justify-center gap-2 ${
                   item.quantity <= 1 ? 'hidden' : ''
@@ -105,6 +123,14 @@ export function Inventory({ items, onSellResult }: InventoryProps) {
             </div>
           ))}
         </div>
+      )}
+
+      {codeModalFor && (
+        <RedeemCodeModal
+          collectibleId={codeModalFor.id}
+          itemName={codeModalFor.name}
+          onClose={() => setCodeModalFor(null)}
+        />
       )}
     </div>
   );
