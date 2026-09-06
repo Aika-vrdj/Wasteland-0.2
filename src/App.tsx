@@ -283,9 +283,9 @@ export default function App() {
             }}
           />
           <div className="relative">
-            <p className="text-xs tracking-widest text-rust mb-1">SCAVENGER OUTPOST // UNIT OPERATOR: AIKA</p>
+            <p className="text-xs tracking-widest text-rust mb-1">SCAVENGER OUTPOST </p>
             <h1 className="text-3xl text-ash">
-              <span className="text-ember">WASTE</span>LAND SCANNER
+              REBEL <span className="text-ember">WASTE</span>LAND
             </h1>
             <p className="text-center text-sm text-ash-dim mt-3">
               by Aika Ioka, version 0.2 —{' '}
