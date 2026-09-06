@@ -84,9 +84,9 @@ export function AccountLinks({ discordId, discordUsername, kickId, kickUsername 
 
       <div className="flex items-center justify-between py-2 border-b border-ash-dim/20">
         <span className="text-ash/80">Discord</span>
-        {discordId ? (
+        {discordUsername ? (
           <span className="flex items-center gap-1 text-gold text-sm">
-            <CheckCircle2 size={16} /> {discordUsername ?? 'linked'}
+            <CheckCircle2 size={16} /> {discordUsername}
           </span>
         ) : (
           <button onClick={handleConnectDiscord} onMouseEnter={() => sfx.hover()} className="terminal-button px-3 py-1 rounded text-sm">
@@ -97,9 +97,9 @@ export function AccountLinks({ discordId, discordUsername, kickId, kickUsername 
 
       <div className="flex items-center justify-between py-2">
         <span className="text-ash/80">Kick</span>
-        {kickId ? (
+        {kickUsername ? (
           <span className="flex items-center gap-1 text-gold text-sm">
-            <CheckCircle2 size={16} /> {kickUsername ?? 'linked'}
+            <CheckCircle2 size={16} /> {kickUsername}
           </span>
         ) : (
           <button
