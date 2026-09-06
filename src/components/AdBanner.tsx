@@ -8,7 +8,7 @@ interface AdSlide {
   href: string | null;
 }
 
-const BUCKET_URL = 'https://twyfuamtvdbtbnvbalbe.supabase.co/storage/v1/object/public/ads';
+const BUCKET_URL = 'https://twyfuamtvdbtbnvbalbe.supabase.co/storage/v1/object/public/site-banners';
 
 const SLIDES: AdSlide[] = [
   { image: `${BUCKET_URL}/1.png`, href: null },
