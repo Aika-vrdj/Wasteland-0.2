@@ -14,6 +14,12 @@
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
+
 const KICK_CLIENT_ID = Deno.env.get('KICK_CLIENT_ID')!;
 const KICK_CLIENT_SECRET = Deno.env.get('KICK_CLIENT_SECRET')!;
 const KICK_REDIRECT_URI = Deno.env.get('KICK_REDIRECT_URI')!;
@@ -22,8 +28,15 @@ const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 Deno.serve(async (req) => {
+  // Browsers send an OPTIONS preflight before the real POST when the
+  // request is cross-origin — without answering this, the actual request
+  // never leaves the browser at all.
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
+
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ success: false, error: 'Method not allowed' }), { status: 405 });
+    return json({ success: false, error: 'Method not allowed' }, 405);
   }
 
   try {
@@ -107,6 +120,6 @@ Deno.serve(async (req) => {
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
   });
 }
