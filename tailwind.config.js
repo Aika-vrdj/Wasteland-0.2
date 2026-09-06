@@ -13,6 +13,7 @@ export default {
         rust: '#D97A34',
         signal: '#3FB8AF',
         gold: '#E8B23D',
+        legend: '#9A3A9F',
       },
       fontFamily: {
         display: ['Rajdhani', 'sans-serif'],
