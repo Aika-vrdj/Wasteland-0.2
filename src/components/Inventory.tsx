@@ -19,7 +19,7 @@ interface InventoryProps {
 const getRarityColor = (rarity: string) => {
   switch (rarity) {
     case 'legendary':
-      return 'text-gold border-gold';
+      return 'text-legend border-legend';
     case 'rare':
       return 'text-signal border-signal';
     case 'uncommon':
