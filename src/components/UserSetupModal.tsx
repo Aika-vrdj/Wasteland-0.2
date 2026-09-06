@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { User, Radio, Save, X, ExternalLink } from 'lucide-react';
+import { User, /* Radio, */ Save, X /* , ExternalLink */ } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) {
   const [username, setUsername] = useState(initialData?.username || '');
-  const [kick, setKick] = useState(initialData?.kick_id || '');
+  // const [kick, setKick] = useState(initialData?.kick_id || ''); // OCULTO: Ya no gestionamos Kick desde este modal
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -17,7 +17,7 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
       .from('players')
       .update({
         username: username,
-        kick_id: kick
+        // kick_id: kick // OCULTO: Para no sobreescribir el ID de Kick gestionado por OAuth
       })
       .eq('id', user?.id);
 
@@ -47,7 +47,7 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
         </div>
 
         <p className="text-ash/70 text-sm mb-8 leading-tight">
-          Rebel detected. Update your Codename and provide your Kick ID to receive rewards and broadcast your progress.
+          Rebel detected. Update your Codename to receive rewards and broadcast your progress.
         </p>
 
         <div className="space-y-6">
@@ -68,7 +68,7 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
             </div>
           </div>
 
-          {/* KICK */}
+          {/* KICK (OCULTO: Se maneja por OAuth de Kick en otro componente)
           <div>
             <label className="block text-ash text-xs uppercase mb-2 font-bold tracking-widest">
               Kick Channel ID
@@ -83,7 +83,6 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
                 placeholder="Your Kick username"
               />
             </div>
-            {/* --- EL NUEVO LINK DE KICK --- */}
             <div className="mt-2 text-right">
               <a 
                 href="https://kick.com/aika_vrdj" 
@@ -96,6 +95,7 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
               </a>
             </div>
           </div>
+          */}
 
           <div className="pt-4">
             <button
