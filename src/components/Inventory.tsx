@@ -16,10 +16,20 @@ interface InventoryProps {
   }) => void;
 }
 
+const RARITIES = ['common', 'uncommon', 'rare', 'legendary'] as const;
+type Rarity = typeof RARITIES[number];
+
+const RARITY_CHIP_COLOR: Record<Rarity, string> = {
+  common: '#8A8378',
+  uncommon: '#D97A34',
+  rare: '#3FB8AF',
+  legendary: '#E8B23D',
+};
+
 const getRarityColor = (rarity: string) => {
   switch (rarity) {
     case 'legendary':
-      return 'text-legend border-legend';
+      return 'text-legendary border-legendary';
     case 'rare':
       return 'text-signal border-signal';
     case 'uncommon':
@@ -39,6 +49,19 @@ const SELL_PRICE_LABEL: Record<string, string> = {
 export function Inventory({ items, onSellResult }: InventoryProps) {
   const [sellingId, setSellingId] = useState<string | null>(null);
   const [codeModalFor, setCodeModalFor] = useState<{ id: string; name: string } | null>(null);
+  const [visibleRarities, setVisibleRarities] = useState<Set<Rarity>>(new Set(RARITIES));
+
+  const toggleRarity = (rarity: Rarity) => {
+    sfx.click();
+    setVisibleRarities(current => {
+      const next = new Set(current);
+      if (next.has(rarity)) next.delete(rarity);
+      else next.add(rarity);
+      return next;
+    });
+  };
+
+  const filteredItems = items.filter(item => visibleRarities.has(item.collectible.rarity as Rarity));
 
   const handleSell = async (item: InventoryItem) => {
     if (sellingId) return;
@@ -66,18 +89,45 @@ export function Inventory({ items, onSellResult }: InventoryProps) {
 
   return (
     <div className="terminal-border bg-void p-6 rounded">
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex items-center gap-2 mb-4">
         <Package className="text-ash" />
         <h2 className="text-2xl font-bold text-ash">INVENTORY DATABASE</h2>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        {RARITIES.map(rarity => {
+          const active = visibleRarities.has(rarity);
+          const color = RARITY_CHIP_COLOR[rarity];
+          return (
+            <button
+              key={rarity}
+              onClick={() => toggleRarity(rarity)}
+              onMouseEnter={() => sfx.hover()}
+              className="text-xs font-mono uppercase px-3 py-1 rounded border transition"
+              style={{
+                color: active ? color : '#4a4038',
+                borderColor: active ? color : '#2A2320',
+                opacity: active ? 1 : 0.5,
+                backgroundColor: active ? `${color}1a` : 'transparent',
+              }}
+            >
+              {rarity}
+            </button>
+          );
+        })}
       </div>
 
       {items.length === 0 ? (
         <div className="text-center py-8 text-ash font-mono">
           DATABASE EMPTY. ACQUIRE ITEMS VIA LOOTING.
         </div>
+      ) : filteredItems.length === 0 ? (
+        <div className="text-center py-8 text-ash-dim font-mono text-sm">
+          No items match the current filter.
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <div key={item.collectible.id} className="terminal-border p-4 rounded">
               <div className="relative">
                 <img
