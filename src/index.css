@@ -106,3 +106,44 @@ h1, h2, h3, .font-display {
 .progress-bar-fill {
   background: linear-gradient(90deg, #C81E3A, #D97A34);
 }
+
+/* Sweep dial — the needle gauge from the original style mockup */
+.scav-dial {
+  position: relative;
+  height: 26px;
+  background: #0a0808;
+  border-radius: 3px;
+  border: 1px solid #2A2320;
+  overflow: hidden;
+}
+
+.scav-dial-ticks {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 6px 3px;
+  pointer-events: none;
+}
+
+.scav-dial-ticks span {
+  width: 1px;
+  height: 8px;
+  background: #45392f;
+}
+
+.scav-dial-ticks span:nth-child(5n) {
+  height: 14px;
+  background: #8A8378;
+}
+
+.scav-needle {
+  position: absolute;
+  top: 2px;
+  width: 2px;
+  height: 22px;
+  background: #C81E3A;
+  box-shadow: 0 0 6px #C81E3A;
+  transition: left 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
