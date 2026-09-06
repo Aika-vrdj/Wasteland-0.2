@@ -36,6 +36,8 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
   const [pulledItem, setPulledItem] = useState<Collectible | null>(null);
   const [burstTrigger, setBurstTrigger] = useState(0);
   const [showCodeModal, setShowCodeModal] = useState(false);
+  const [needlePos, setNeedlePos] = useState(8);
+  const [sweepReadout, setSweepReadout] = useState('sweep: idle');
 
   const handleRoll = async () => {
     if (rebelPoints < ROLL_COST || isRolling) return;
@@ -43,6 +45,9 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
     setError(null);
     setPulledItem(null);
     sfx.click();
+    sfx.sweep();
+    setNeedlePos(Math.random() * 90);
+    setSweepReadout('sweeping...');
 
     try {
       // The roll itself — rarity, item choice, cost deduction, XP/level —
@@ -68,6 +73,7 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
       if (result.item) {
         sfx.reveal(result.item.rarity);
         setBurstTrigger(t => t + 1);
+        setSweepReadout(`locked: ${result.item.rarity}`);
       }
     } finally {
       setIsRolling(false);
@@ -89,7 +95,17 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
           <span className="font-semibold text-gold">{rebelPoints} RP</span>
         </div>
       </div>
-      <p className="text-xs text-ash-dim mb-6">batteries not included. hope not guaranteed.</p>
+      <p className="text-xs text-ash-dim mb-4">batteries not included. hope not guaranteed.</p>
+
+      <div className="flex items-center gap-3 mb-4">
+        <div className="scav-dial flex-1">
+          <div className="scav-dial-ticks">
+            {Array.from({ length: 20 }).map((_, i) => <span key={i} />)}
+          </div>
+          <div className="scav-needle" style={{ left: `${needlePos}%` }} />
+        </div>
+        <span className="text-xs text-signal font-mono min-w-[110px] text-right">{sweepReadout}</span>
+      </div>
 
       {/* Reveal window — shows the last pull, with a rarity-colored particle burst */}
       <div
