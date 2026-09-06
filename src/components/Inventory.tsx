@@ -87,6 +87,42 @@ export function Inventory({ items, onSellResult }: InventoryProps) {
     }
   };
 
+  const handleSellAll = async (item: InventoryItem) => {
+    if (sellingId) return;
+    setSellingId(item.collectible.id);
+    sfx.click();
+
+    try {
+      // Same server-side pricing as a single sell, just multiplied by
+      // however many duplicates exist — computed in Postgres, not here.
+      const { data, error } = await supabase.rpc('sell_all_duplicates', {
+        p_collectible_id: item.collectible.id,
+      });
+
+      if (error) {
+        onSellResult(item.collectible.id, { success: false, error: error.message });
+        sfx.error();
+        return;
+      }
+      if (!data.success) {
+        onSellResult(item.collectible.id, data);
+        sfx.error();
+        return;
+      }
+
+      // sell_all_duplicates always keeps exactly 1 copy.
+      onSellResult(item.collectible.id, {
+        success: true,
+        rp_gained: data.rp_gained,
+        new_rebel_points: data.new_rebel_points,
+        remaining_quantity: 1,
+      });
+      sfx.success();
+    } finally {
+      setSellingId(null);
+    }
+  };
+
   return (
     <div className="terminal-border bg-void p-6 rounded">
       <div className="flex items-center gap-2 mb-4">
@@ -157,19 +193,29 @@ export function Inventory({ items, onSellResult }: InventoryProps) {
                 </button>
               )}
 
-              <button
-                onClick={() => handleSell(item)}
-                onMouseEnter={() => sfx.hover()}
-                disabled={sellingId === item.collectible.id}
-                className={`terminal-button w-full px-3 py-2 rounded flex items-center justify-center gap-2 ${
-                  item.quantity <= 1 ? 'hidden' : ''
-                }`}
-              >
-                <DollarSign size={16} />
-                {sellingId === item.collectible.id
-                  ? 'Selling...'
-                  : `Sell for ${SELL_PRICE_LABEL[item.collectible.rarity] ?? '5'} RP`}
-              </button>
+              <div className={`flex gap-2 ${item.quantity <= 1 ? 'hidden' : ''}`}>
+                <button
+                  onClick={() => handleSell(item)}
+                  onMouseEnter={() => sfx.hover()}
+                  disabled={sellingId === item.collectible.id}
+                  className="terminal-button flex-1 px-3 py-2 rounded flex items-center justify-center gap-2 text-sm"
+                >
+                  <DollarSign size={16} />
+                  {sellingId === item.collectible.id
+                    ? '...'
+                    : `Sell (${SELL_PRICE_LABEL[item.collectible.rarity] ?? '5'} RP)`}
+                </button>
+                <button
+                  onClick={() => handleSellAll(item)}
+                  onMouseEnter={() => sfx.hover()}
+                  disabled={sellingId === item.collectible.id}
+                  title={`Sells all ${item.quantity - 1} duplicates, keeps 1 copy`}
+                  className="terminal-button flex-1 px-3 py-2 rounded flex items-center justify-center gap-2 text-sm"
+                >
+                  <DollarSign size={16} />
+                  {sellingId === item.collectible.id ? '...' : `Sell All (${item.quantity - 1})`}
+                </button>
+              </div>
             </div>
           ))}
         </div>
