@@ -5,6 +5,7 @@ import { CodeRedemption } from './components/CodeRedemption';
 import { GachaSystem } from './components/GachaSystem';
 import { LevelProgress } from './components/LevelProgress';
 import { AccountLinks } from './components/AccountLinks';
+import { LeaderboardModal } from './components/LeaderboardModal';
 import { Auth } from './components/Auth';
 import { UserSetupModal } from './components/UserSetupModal'; // <-- IMPORTANTE: Crea este archivo con el código anterior
 import { supabase } from './lib/supabase';
@@ -19,6 +20,7 @@ export default function App() {
   const [discordUsername, setDiscordUsername] = useState<string | null>(null);
   const [kickId, setKickId] = useState<string | null>(null);
   const [kickUsername, setKickUsername] = useState<string | null>(null);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   
   // --- NUEVOS ESTADOS PARA EL PERFIL ---
   const [showSetup, setShowSetup] = useState(false);
@@ -321,14 +323,12 @@ export default function App() {
             >
               Sign Out
             </button>
-            <a
-              href="https://wastlandleaderboard.netlify.app/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setShowLeaderboard(true)}
               className="text-ash hover:text-rust underline decoration-dotted transition ml-4"
             >
               Leaderboard
-            </a>
+            </button>
           </div>
         </div>
 
@@ -354,6 +354,8 @@ export default function App() {
         <GachaSystem rebelPoints={rebelPoints} onRollResult={handleGachaRollResult} />
         <Inventory items={inventory} onSellResult={handleSellResult} />
       </div>
+
+      {showLeaderboard && <LeaderboardModal onClose={() => setShowLeaderboard(false)} />}
     </div>
   );
 }
