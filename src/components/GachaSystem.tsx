@@ -157,7 +157,7 @@ export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
         <Sparkles size={20} />
         {isRolling ? 'Sweeping...' : 'Sweep for junk'}
       </button>
-      <p className="text-center text-xs text-ash-dim mt-2">costs {ROLL_COST} RP · cross your fingers for a rare pull, and see if you can survive the waseland</p>
+      <p className="text-center text-xs text-ash-dim mt-2">costs {ROLL_COST} RP · cross your fingers for a rare pull, and see if you can survive the wasteland</p>
 
       {error && (
         <p className="mt-3 text-center text-ember text-sm font-mono">{error}</p>
