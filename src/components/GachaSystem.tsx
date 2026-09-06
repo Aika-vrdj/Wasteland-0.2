@@ -27,7 +27,7 @@ const RARITY_COLOR: Record<string, string> = {
   common: '#8A8378',
   uncommon: '#D97A34',
   rare: '#3FB8AF',
-  legendary: '#E6E6FA'
+  legendary: '#9A3A9F'
 };
 
 export function GachaSystem({ rebelPoints, onRollResult }: GachaSystemProps) {
