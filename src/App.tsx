@@ -288,7 +288,7 @@ export default function App() {
               REBEL <span className="text-ember">WASTE</span>LAND
             </h1>
             <p className="text-center text-sm text-ash-dim mt-3">
-              by Aika Ioka, version 0.2 —{' '}
+              by Aika Ioka, version 2.0 —{' '}
               <a href="https://aikavrdj.com" target="_blank" rel="noopener noreferrer" className="text-ash underline hover:text-rust">
                 aikavrdj.com
               </a>
