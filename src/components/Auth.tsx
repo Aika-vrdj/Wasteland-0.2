@@ -91,7 +91,7 @@ export function Auth() {
           ██║███╗██║██╔══██║╚════██║   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║  ██║
           ╚███╔███╔╝██║  ██║███████║   ██║   ███████╗███████╗██║  ██║██║ ╚████║██████╔╝
            ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
-                      by Aika Ioka, version 0.2, aikavrdj.com
+                      by Aika Ioka, version 2.0, aikavrdj.com
         `}
         </pre>
         <h1 className="text-3xl font-bold">Welcome to the Wasteland, Rebel</h1>
