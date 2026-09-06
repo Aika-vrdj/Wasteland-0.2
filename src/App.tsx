@@ -127,7 +127,7 @@ export default function App() {
   // it onto the player row via the server-side RPC (never trusts the
   // client for the actual Discord id/username).
   useEffect(() => {
-    if (!session?.user?.id || discordId) return;
+    if (!session?.user?.id || discordUsername) return;
 
     supabase.auth.getUserIdentities().then(({ data }) => {
       const hasDiscord = data?.identities?.some(i => i.provider === 'discord');
@@ -284,12 +284,12 @@ export default function App() {
             }}
           />
           <div className="relative">
-            <p className="text-xs tracking-widest text-rust mb-1">SCAVENGER OUTPOST</p>
+            <p className="text-xs tracking-widest text-rust mb-1">SCAVENGER OUTPOST // UNIT OPERATOR: AIKA</p>
             <h1 className="text-3xl text-ash">
-             REBEL <span className="text-ember">WASTE</span>LAND 
+              <span className="text-ember">WASTE</span>LAND SCANNER
             </h1>
             <p className="text-center text-sm text-ash-dim mt-3">
-              by Aika Ioka, version 2.0 —{' '}
+              by Aika Ioka, version 0.2 —{' '}
               <a href="https://aikavrdj.com" target="_blank" rel="noopener noreferrer" className="text-ash underline hover:text-rust">
                 aikavrdj.com
               </a>
