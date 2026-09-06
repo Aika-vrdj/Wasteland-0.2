@@ -12,7 +12,7 @@ export default {
         'ember-dim': '#7A1425',
         rust: '#D97A34',
         signal: '#3FB8AF',
-        gold: '#9A3A9F',
+        gold: '#E8B23D',
       },
       fontFamily: {
         display: ['Rajdhani', 'sans-serif'],
