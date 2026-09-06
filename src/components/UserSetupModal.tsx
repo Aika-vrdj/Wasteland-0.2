@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
-import { User, /* Radio, */ Save, X /* , ExternalLink */ } from 'lucide-react';
+import { User, Radio, Save, X, ExternalLink } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) {
   const [username, setUsername] = useState(initialData?.username || '');
-  // const [kick, setKick] = useState(initialData?.kick_id || ''); // OCULTO: Ya no gestionamos Kick desde este modal
+  // const [kick, setKick] = useState(initialData?.kick_id || '');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const handleSave = async () => {
     setLoading(true);
+    setErrorMessage(null);
+
     const { data: { user } } = await supabase.auth.getUser();
 
     const { error } = await supabase
       .from('players')
       .update({
-        username: username,
-        // kick_id: kick // OCULTO: Para no sobreescribir el ID de Kick gestionado por OAuth
+        username: username.trim(),
+        // kick_id: kick
       })
       .eq('id', user?.id);
 
@@ -27,7 +30,11 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
       if (onUpdate) onUpdate();
       onClose();
     } else {
-      alert("Error updating terminal.");
+      if (error.code === '23505' || error.message.includes('unique')) {
+        setErrorMessage('Codename already taken. Choose another, Rebel.');
+      } else {
+        alert("Error updating terminal.");
+      }
     }
   };
 
@@ -40,14 +47,20 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
             {">"} IDENTIFICATION_REQUIRED
           </h2>
           {initialData?.username && (
-            <button onClick={onClose} className="text-ash hover:text-ember transition-colors">
+            <button 
+              onClick={() => {
+                setErrorMessage(null);
+                onClose();
+              }} 
+              className="text-ash hover:text-ember transition-colors"
+            >
               <X size={20} />
             </button>
           )}
         </div>
 
         <p className="text-ash/70 text-sm mb-8 leading-tight">
-          Rebel detected. Update your Codename to receive rewards and broadcast your progress.
+          Rebel detected. Update your Codename and provide your Kick ID to receive rewards and broadcast your progress.
         </p>
 
         <div className="space-y-6">
@@ -61,14 +74,24 @@ export function UserSetupModal({ isOpen, onClose, initialData, onUpdate }: any) 
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  if (errorMessage) setErrorMessage(null);
+                }}
                 className="w-full bg-ember/5 border border-ash-dim/60 rounded py-2 pl-10 pr-4 text-ash focus:outline-none focus:border-gold transition-all"
                 placeholder="E.g.: Scavenger_01"
               />
             </div>
           </div>
 
-          {/* KICK (OCULTO: Se maneja por OAuth de Kick en otro componente)
+          {/* MENSAJE DE ERROR SI EL NOMBRE YA EXISTE */}
+          {errorMessage && (
+            <div className="text-ember text-xs py-2 border-l-2 border-ember pl-3 bg-ember/10 font-mono tracking-wider">
+              {">"} ERROR: {errorMessage}
+            </div>
+          )}
+
+          {/* KICK 
           <div>
             <label className="block text-ash text-xs uppercase mb-2 font-bold tracking-widest">
               Kick Channel ID
