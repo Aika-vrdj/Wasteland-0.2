@@ -6,6 +6,7 @@ import { GachaSystem } from './components/GachaSystem';
 import { LevelProgress } from './components/LevelProgress';
 import { AccountLinks } from './components/AccountLinks';
 import { LeaderboardModal } from './components/LeaderboardModal';
+import { AdBanner } from './components/AdBanner';
 import { Auth } from './components/Auth';
 import { UserSetupModal } from './components/UserSetupModal'; // <-- IMPORTANTE: Crea este archivo con el código anterior
 import { supabase } from './lib/supabase';
@@ -283,12 +284,12 @@ export default function App() {
             }}
           />
           <div className="relative">
-            <p className="text-xs tracking-widest text-rust mb-1">SCAVENGER OUTPOST </p>
+            <p className="text-xs tracking-widest text-rust mb-1">SCAVENGER OUTPOST // UNIT OPERATOR: AIKA</p>
             <h1 className="text-3xl text-ash">
-              REBEL <span className="text-ember">WASTE</span>LAND
+              <span className="text-ember">WASTE</span>LAND SCANNER
             </h1>
             <p className="text-center text-sm text-ash-dim mt-3">
-              by Aika Ioka, version 2.0 —{' '}
+              by Aika Ioka, version 0.2 —{' '}
               <a href="https://aikavrdj.com" target="_blank" rel="noopener noreferrer" className="text-ash underline hover:text-rust">
                 aikavrdj.com
               </a>
@@ -340,6 +341,8 @@ export default function App() {
             discord community
           </a> for codes.
         </p>
+
+        <AdBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <CodeRedemption onRedeem={handleCodeRedeem} />
